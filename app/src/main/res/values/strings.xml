@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Expense Tracker</string>
+    <!--IDs-->
+    <string name="web_client_id">901579990217-4veiolfl1kkqrbk766a3gbfddie729fo.apps.googleusercontent.com</string>
+    <!--Urls-->
+    <string name="firebase_project_id">expense-tracker-51866.appspot.com</string>
 </resources>
