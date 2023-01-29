@@ -70,6 +70,7 @@ dependencies {
     implementation "com.google.firebase:firebase-database-ktx"
     implementation "com.google.firebase:firebase-firestore-ktx"
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-functions-ktx'
     //Paging Compose
     implementation "androidx.paging:paging-compose:$paging_compose_version"
     //Play Services
@@ -80,4 +81,6 @@ dependencies {
     implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
     //Coil
     implementation "io.coil-kt:coil-compose:$coil_compose_version"
+    //gson
+    implementation 'com.google.code.gson:gson:2.9.0'
 }

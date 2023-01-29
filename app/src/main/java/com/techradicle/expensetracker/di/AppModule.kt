@@ -16,7 +16,9 @@ import com.techradicle.expensetracker.R
 import com.techradicle.expensetracker.core.AppConstants.SIGN_IN_REQUEST
 import com.techradicle.expensetracker.core.AppConstants.SIGN_UP_REQUEST
 import com.techradicle.expensetracker.data.AuthRepositoryImpl
+import com.techradicle.expensetracker.data.DashboardRepositoryImpl
 import com.techradicle.expensetracker.domain.repository.AuthRepository
+import com.techradicle.expensetracker.domain.repository.DashboardRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -97,4 +99,9 @@ object AppModule {
         signUpRequest = signUpRequest,
         db = db
     )
+
+    @Provides
+    fun providesDashboardRepository(
+        auth: FirebaseAuth
+    ): DashboardRepository = DashboardRepositoryImpl(auth)
 }

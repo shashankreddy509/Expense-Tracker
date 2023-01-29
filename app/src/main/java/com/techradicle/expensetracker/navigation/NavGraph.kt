@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.google.firebase.auth.FirebaseAuth
 import com.techradicle.expensetracker.presentation.auth.AuthScreen
 import com.techradicle.expensetracker.presentation.dashboard.DashboardScreen
 
@@ -16,13 +17,14 @@ import com.techradicle.expensetracker.presentation.dashboard.DashboardScreen
 @ExperimentalAnimationApi
 @Composable
 fun NavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    auth: FirebaseAuth
 ) {
     val direction = remember(navController) { Direction(navController) }
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.AuthScreen.route,
+        startDestination = if (auth.currentUser != null) Screen.DashboardScreen.route else Screen.AuthScreen.route,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None }
     ) {
