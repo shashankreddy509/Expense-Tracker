@@ -71,6 +71,7 @@ dependencies {
     implementation "com.google.firebase:firebase-firestore-ktx"
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-functions-ktx'
+    implementation 'com.google.firebase:firebase-storage-ktx'
     //Paging Compose
     implementation "androidx.paging:paging-compose:$paging_compose_version"
     //Play Services

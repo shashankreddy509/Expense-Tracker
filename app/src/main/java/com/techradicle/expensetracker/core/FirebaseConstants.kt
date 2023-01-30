@@ -14,5 +14,5 @@ object FirebaseConstants {
 //    const val PAGE_SIZE = 8L
 
     //Base URLs
-//    const val STORAGE_BASE_URL = "https://firebasestorage.googleapis.com/v0/b"
+    const val STORAGE_BASE_URL = "gs://expense-tracker-51866.appspot.com"
 }

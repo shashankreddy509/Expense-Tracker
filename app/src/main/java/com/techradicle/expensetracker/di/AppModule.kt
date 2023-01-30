@@ -11,7 +11,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.techradicle.expensetracker.R
 import com.techradicle.expensetracker.core.AppConstants.SIGN_IN_REQUEST
 import com.techradicle.expensetracker.core.AppConstants.SIGN_UP_REQUEST
@@ -39,6 +43,12 @@ object AppModule {
 
     @Provides
     fun providesFirestore() = Firebase.firestore
+
+    @Provides
+    fun providesStorage() = Firebase.storage
+
+    @Provides
+    fun providesFunctions() = Firebase.functions
 
     @Provides
     fun provideOneTapClient(
@@ -102,6 +112,14 @@ object AppModule {
 
     @Provides
     fun providesDashboardRepository(
-        auth: FirebaseAuth
-    ): DashboardRepository = DashboardRepositoryImpl(auth)
+        auth: FirebaseAuth,
+        storage: FirebaseStorage,
+        firestore: FirebaseFirestore,
+        functions: FirebaseFunctions
+    ): DashboardRepository = DashboardRepositoryImpl(
+        auth = auth,
+        storage = storage,
+        firestore = firestore,
+        functions = functions
+    )
 }
