@@ -2,6 +2,7 @@ package com.techradicle.expensetracker.di
 
 import android.app.Application
 import android.content.Context
+import androidx.paging.PagingConfig
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -19,6 +20,7 @@ import com.google.firebase.storage.ktx.storage
 import com.techradicle.expensetracker.R
 import com.techradicle.expensetracker.core.AppConstants.SIGN_IN_REQUEST
 import com.techradicle.expensetracker.core.AppConstants.SIGN_UP_REQUEST
+import com.techradicle.expensetracker.core.FirebaseConstants.PAGE_SIZE
 import com.techradicle.expensetracker.data.AuthRepositoryImpl
 import com.techradicle.expensetracker.data.DashboardRepositoryImpl
 import com.techradicle.expensetracker.domain.repository.AuthRepository
@@ -115,11 +117,19 @@ object AppModule {
         auth: FirebaseAuth,
         storage: FirebaseStorage,
         firestore: FirebaseFirestore,
-        functions: FirebaseFunctions
+        functions: FirebaseFunctions,
+        config: PagingConfig
     ): DashboardRepository = DashboardRepositoryImpl(
         auth = auth,
         storage = storage,
         firestore = firestore,
-        functions = functions
+        functions = functions,
+        config = config
+    )
+
+
+    @Provides
+    fun providePagingConfig() = PagingConfig(
+        pageSize = PAGE_SIZE.toInt()
     )
 }

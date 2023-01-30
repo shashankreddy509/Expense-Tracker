@@ -7,7 +7,10 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -17,15 +20,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.ktx.functions
-import com.google.firebase.ktx.Firebase
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.techradicle.expensetracker.BuildConfig
 import com.techradicle.expensetracker.R
 import com.techradicle.expensetracker.components.AuthTopBar
 import com.techradicle.expensetracker.components.ProgressBar
+import com.techradicle.expensetracker.components.layouts.HorizontalContent
+import com.techradicle.expensetracker.core.AppConstants.NO_RECORDS
 import com.techradicle.expensetracker.core.AppConstants.TAG
 import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.domain.model.Response
@@ -39,9 +45,7 @@ fun DashboardScreen(
 ) {
     var hasImage by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    var imageData by remember { mutableStateOf("") }
     val context = LocalContext.current
-    val functions: FirebaseFunctions = Firebase.functions
 
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
@@ -49,6 +53,8 @@ fun DashboardScreen(
             hasImage = success
         }
     )
+
+    val receipts = viewModel.getReceipts().collectAsLazyPagingItems()
 
     Scaffold(
         topBar = {
@@ -64,11 +70,30 @@ fun DashboardScreen(
                     val bitmap: Bitmap =
                         MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
                     viewModel.uploadImage(imageUri!!, Utils.getRequestData(bitmap))
-//                    viewModel.getTextFromImage(Utils.getRequestData(bitmap))
                     hasImage = false
                 }
-                if (imageData.isNotEmpty())
-                    Text(text = imageData)
+                val refresh = receipts.loadState.refresh
+                when {
+                    refresh is LoadState.Loading -> ProgressBar()
+                    receipts.itemCount > 0 -> {
+                        HorizontalContent(
+                            receiptsPaging = viewModel.getReceipts().collectAsLazyPagingItems()
+                        )
+                    }
+                    receipts.itemCount == 0 -> {
+                        Text(
+                            text = NO_RECORDS,
+                            fontSize = 24.sp,
+                            color = Color.Black,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .fillMaxHeight()
+                        )
+                    }
+                    refresh is LoadState.Error -> print(refresh)
+                }
+
             }
         },
         floatingActionButton = {

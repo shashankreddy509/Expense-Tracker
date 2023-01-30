@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.techradicle.expensetracker.domain.model.ImageUploadData
 import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.domain.repository.DashboardRepository
@@ -27,13 +28,11 @@ class DashboardViewModel @Inject constructor(
         imageUrl = repo.uploadImageToStorage(uri, requestJson)
     }
 
-    fun getTextFromImage(requestJson: String) = viewModelScope.launch {
-        repo.getTextFromImage(requestJson)
-    }
-
     fun addImageToDatabase(imageData: ImageUploadData) = viewModelScope.launch {
         repo.addImageToDatabase(imageData)
     }
+
+    fun getReceipts() = repo.getReceiptsFromFirestore().cachedIn(viewModelScope)
 
 
 }
