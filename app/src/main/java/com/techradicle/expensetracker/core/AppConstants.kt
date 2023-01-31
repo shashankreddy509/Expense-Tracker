@@ -34,4 +34,7 @@ object AppConstants {
     //Content Descriptions
     const val GO_BACK = "back"
     const val LOGOUT = "Logout"
+
+    //Arguments
+    const val RECEIPT_ID = "receiptId"
 }

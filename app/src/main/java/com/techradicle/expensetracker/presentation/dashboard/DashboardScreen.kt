@@ -45,7 +45,7 @@ import java.util.*
 @Composable
 fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel(),
-    navigateToReceiptDetailsScreen: () -> Unit,
+    navigateToReceiptDetailsScreen: (receiptId: String) -> Unit,
     navigateToAuthScreen: () -> Unit,
 ) {
     var hasImage by remember { mutableStateOf(false) }

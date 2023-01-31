@@ -7,9 +7,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.firebase.auth.FirebaseAuth
+import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
+import com.techradicle.expensetracker.core.AppConstants.RECEIPT_ID
 import com.techradicle.expensetracker.presentation.auth.AuthScreen
 import com.techradicle.expensetracker.presentation.dashboard.DashboardScreen
 import com.techradicle.expensetracker.presentation.receipt_details.ReceiptDetailsScreen
@@ -40,12 +44,23 @@ fun NavGraph(
         }
         composable(route = Screen.DashboardScreen.route) {
             DashboardScreen(
-                navigateToReceiptDetailsScreen = direction.navigateToReceiptDetailsScreen,
+                navigateToReceiptDetailsScreen = { receiptId ->
+                    direction.navigateToReceiptDetailsScreen(receiptId)
+                },
                 navigateToAuthScreen = direction.navigateToAuthScreen
             )
         }
-        composable(route = Screen.ReceiptDetailsScreen.route) {
-            ReceiptDetailsScreen(navigateBack = { direction.navigateBack() })
+        composable(route = "${Screen.ReceiptDetailsScreen.route}/{$RECEIPT_ID}",
+            arguments = listOf(
+                navArgument(RECEIPT_ID) {
+                    type = NavType.StringType
+                }
+            )) { backStackEntry ->
+            val receiptId = backStackEntry.arguments?.getString(RECEIPT_ID) ?: NO_VALUE
+            ReceiptDetailsScreen(
+                receiptId = receiptId,
+                navigateBack = { direction.navigateBack() }
+            )
         }
     }
 }

@@ -23,8 +23,10 @@ import com.techradicle.expensetracker.core.AppConstants.SIGN_UP_REQUEST
 import com.techradicle.expensetracker.core.FirebaseConstants.PAGE_SIZE
 import com.techradicle.expensetracker.data.AuthRepositoryImpl
 import com.techradicle.expensetracker.data.DashboardRepositoryImpl
+import com.techradicle.expensetracker.data.ReceiptDetailsRepositoryImpl
 import com.techradicle.expensetracker.domain.repository.AuthRepository
 import com.techradicle.expensetracker.domain.repository.DashboardRepository
+import com.techradicle.expensetracker.domain.repository.ReceiptDetailsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -127,6 +129,13 @@ object AppModule {
         firestore = firestore,
         functions = functions,
         config = config
+    )
+
+    @Provides
+    fun providesReceiptDetailsRepository(
+        firestore: FirebaseFirestore
+    ): ReceiptDetailsRepository = ReceiptDetailsRepositoryImpl(
+        firebaseFirestore = firestore
     )
 
 

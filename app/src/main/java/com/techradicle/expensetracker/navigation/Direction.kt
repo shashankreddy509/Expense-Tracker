@@ -13,10 +13,9 @@ class Direction(navController: NavController) {
         navController.navigate(Screen.DashboardScreen.route)
     }
 
-    val navigateToReceiptDetailsScreen: () -> Unit = {
-        navController.navigate(Screen.ReceiptDetailsScreen.route)
+    val navigateToReceiptDetailsScreen: (String) -> Unit = { receiptId ->
+        navController.navigate("${Screen.ReceiptDetailsScreen.route}/$receiptId")
     }
-
 
 
     val navigateBack: () -> Unit = {

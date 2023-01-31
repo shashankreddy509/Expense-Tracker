@@ -13,14 +13,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.techradicle.expensetracker.components.icons.ThumbImage
+import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
 import com.techradicle.expensetracker.domain.model.ReceiptData
 
 @ExperimentalMaterial3Api
 @Composable
 fun ReceiptContent(
     receipt: ReceiptData,
-    onClick: () -> Unit
+    onClick: (receiptId: String) -> Unit,
 ) {
+    val receiptId = receipt.id ?: NO_VALUE
     Card(
         modifier = Modifier
             .padding(4.dp)
@@ -30,7 +32,7 @@ fun ReceiptContent(
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),
-        onClick = onClick
+        onClick = { onClick(receiptId) }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

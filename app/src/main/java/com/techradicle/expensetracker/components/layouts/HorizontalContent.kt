@@ -15,7 +15,7 @@ import com.techradicle.expensetracker.presentation.dashboard.components.ReceiptC
 @Composable
 fun HorizontalContent(
     receiptsPaging: LazyPagingItems<ReceiptData>,
-    navigateToReceiptDetailsScreen: () -> Unit,
+    navigateToReceiptDetailsScreen: (receiptId: String) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
