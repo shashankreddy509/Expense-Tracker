@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,6 +29,7 @@ import com.techradicle.expensetracker.domain.model.Response.Failure
 import com.techradicle.expensetracker.domain.model.Response.Success
 import com.techradicle.expensetracker.domain.model.User
 import com.techradicle.expensetracker.domain.repository.DashboardRepository
+import com.techradicle.expensetracker.domain.repository.SignOutResponse
 import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
@@ -35,10 +37,11 @@ import javax.inject.Singleton
 
 @Singleton
 class DashboardRepositoryImpl @Inject constructor(
-    val auth: FirebaseAuth,
-    val storage: FirebaseStorage,
-    val firestore: FirebaseFirestore,
-    val functions: FirebaseFunctions,
+    private val auth: FirebaseAuth,
+    private var oneTapClient: SignInClient,
+    private val storage: FirebaseStorage,
+    private val firestore: FirebaseFirestore,
+    private val functions: FirebaseFunctions,
     private val config: PagingConfig
 ) : DashboardRepository {
 
@@ -130,19 +133,13 @@ class DashboardRepositoryImpl @Inject constructor(
         )
     }.flow
 
-    fun getData() {
-        firestore.collection(RECEIPTS).whereEqualTo("uid","eK9TuyNhcVdwMUACGTBKeHT8D4H3").get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.e(TAG,document.documents.size.toString())
-                    Log.e(TAG, "DocumentSnapshot data: ${document.documents}")
-                } else {
-                    Log.d(TAG, "No such document")
-                }
-
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }
+    override suspend fun signOut(): SignOutResponse {
+        return try {
+            oneTapClient.signOut().await()
+            auth.signOut()
+            Success(true)
+        } catch (e: Exception) {
+            Failure(e)
+        }
     }
 }

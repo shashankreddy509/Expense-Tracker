@@ -9,6 +9,7 @@ import com.techradicle.expensetracker.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 typealias ReceiptPagingData = PagingData<ReceiptData>
+typealias SignOutResponse = Response<Boolean>
 
 interface DashboardRepository {
     val user: User
@@ -18,5 +19,7 @@ interface DashboardRepository {
     suspend fun addImageToDatabase(imageData: ImageUploadData): Response<Boolean>
 
     fun getReceiptsFromFirestore(): Flow<ReceiptPagingData>
+
+    suspend fun signOut(): SignOutResponse
 
 }

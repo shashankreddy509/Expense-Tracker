@@ -28,13 +28,16 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.techradicle.expensetracker.BuildConfig
 import com.techradicle.expensetracker.R
+import com.techradicle.expensetracker.components.AppTopBar
 import com.techradicle.expensetracker.components.AuthTopBar
 import com.techradicle.expensetracker.components.ProgressBar
 import com.techradicle.expensetracker.components.layouts.HorizontalContent
+import com.techradicle.expensetracker.core.AppConstants.DASHBOARD
 import com.techradicle.expensetracker.core.AppConstants.NO_RECORDS
 import com.techradicle.expensetracker.core.AppConstants.TAG
 import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.domain.model.Response
+import com.techradicle.expensetracker.presentation.dashboard.components.SignOut
 import java.io.File
 import java.util.*
 
@@ -42,6 +45,8 @@ import java.util.*
 @Composable
 fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel(),
+    navigateToReceiptDetailsScreen: () -> Unit,
+    navigateToAuthScreen: () -> Unit,
 ) {
     var hasImage by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
@@ -58,7 +63,12 @@ fun DashboardScreen(
 
     Scaffold(
         topBar = {
-            AuthTopBar(id = R.string.app_name)
+            AppTopBar(
+                title = DASHBOARD,
+                navigateToAuthScreen = {
+                    viewModel.signOut()
+                }
+            )
         },
         content = { padding ->
             Column(
@@ -77,7 +87,8 @@ fun DashboardScreen(
                     refresh is LoadState.Loading -> ProgressBar()
                     receipts.itemCount > 0 -> {
                         HorizontalContent(
-                            receiptsPaging = viewModel.getReceipts().collectAsLazyPagingItems()
+                            receiptsPaging = viewModel.getReceipts().collectAsLazyPagingItems(),
+                            navigateToReceiptDetailsScreen = navigateToReceiptDetailsScreen
                         )
                     }
                     receipts.itemCount == 0 -> {
@@ -111,6 +122,12 @@ fun DashboardScreen(
             }
         }
     )
+
+    SignOut { signedOut ->
+        if (signedOut) {
+            navigateToAuthScreen()
+        }
+    }
 
     when (val addImageToStorageResponse = viewModel.imageUrl) {
         is Response.Loading -> ProgressBar()

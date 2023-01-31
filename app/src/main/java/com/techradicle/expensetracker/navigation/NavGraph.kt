@@ -12,6 +12,7 @@ import com.google.accompanist.navigation.animation.composable
 import com.google.firebase.auth.FirebaseAuth
 import com.techradicle.expensetracker.presentation.auth.AuthScreen
 import com.techradicle.expensetracker.presentation.dashboard.DashboardScreen
+import com.techradicle.expensetracker.presentation.receipt_details.ReceiptDetailsScreen
 
 @ExperimentalMaterial3Api
 @ExperimentalAnimationApi
@@ -38,7 +39,13 @@ fun NavGraph(
             )
         }
         composable(route = Screen.DashboardScreen.route) {
-            DashboardScreen()
+            DashboardScreen(
+                navigateToReceiptDetailsScreen = direction.navigateToReceiptDetailsScreen,
+                navigateToAuthScreen = direction.navigateToAuthScreen
+            )
+        }
+        composable(route = Screen.ReceiptDetailsScreen.route) {
+            ReceiptDetailsScreen(navigateBack = { direction.navigateBack() })
         }
     }
 }

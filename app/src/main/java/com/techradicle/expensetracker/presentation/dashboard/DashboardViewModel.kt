@@ -10,6 +10,7 @@ import androidx.paging.cachedIn
 import com.techradicle.expensetracker.domain.model.ImageUploadData
 import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.domain.repository.DashboardRepository
+import com.techradicle.expensetracker.domain.repository.SignOutResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,6 +24,9 @@ class DashboardViewModel @Inject constructor(
     var imageUrl by mutableStateOf<Response<ImageUploadData>>(Response.Success(null))
         private set
 
+    var signOutResponse by mutableStateOf<SignOutResponse>(Response.Success(false))
+        private set
+
     fun uploadImage(uri: Uri, requestJson: String) = viewModelScope.launch {
         imageUrl = Response.Loading
         imageUrl = repo.uploadImageToStorage(uri, requestJson)
@@ -34,5 +38,8 @@ class DashboardViewModel @Inject constructor(
 
     fun getReceipts() = repo.getReceiptsFromFirestore().cachedIn(viewModelScope)
 
-
+    fun signOut() = viewModelScope.launch {
+        signOutResponse = Response.Loading
+        signOutResponse = repo.signOut()
+    }
 }

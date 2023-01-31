@@ -18,27 +18,28 @@ import com.techradicle.expensetracker.domain.model.ReceiptData
 @ExperimentalMaterial3Api
 @Composable
 fun ReceiptContent(
-    receipt: ReceiptData
+    receipt: ReceiptData,
+    onClick: () -> Unit
 ) {
-    Card(modifier = Modifier
-        .padding(4.dp)
-        .fillMaxWidth(),
+    Card(
+        modifier = Modifier
+            .padding(4.dp)
+            .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(3.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         ),
-        onClick = {
-//            Naviaget to Next screen
-        }) {
+        onClick = onClick
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
         ) {
             receipt.apply {
                 ThumbImage(
                     url = imageUrl!!,
-                    width = 128.dp,
-                    height = 128.dp,
+                    width = 64.dp,
+                    height = 64.dp,
                     padding = 8.dp
                 )
                 Text(

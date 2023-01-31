@@ -115,12 +115,14 @@ object AppModule {
     @Provides
     fun providesDashboardRepository(
         auth: FirebaseAuth,
+        oneTapClient: SignInClient,
         storage: FirebaseStorage,
         firestore: FirebaseFirestore,
         functions: FirebaseFunctions,
         config: PagingConfig
     ): DashboardRepository = DashboardRepositoryImpl(
         auth = auth,
+        oneTapClient = oneTapClient,
         storage = storage,
         firestore = firestore,
         functions = functions,
