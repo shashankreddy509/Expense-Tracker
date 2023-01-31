@@ -9,5 +9,8 @@ data class ReceiptData(
     val imageUrl: String? = null,
     val imageData: String? = null,
     val uid: String? = null,
-    val id: String? = null
+    val id: String? = null,
+    val cardNo: String? = null,
+    val storeName: String? = null,
+    val items: List<String>? = null,
 )

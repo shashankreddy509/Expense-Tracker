@@ -49,6 +49,7 @@ fun DashboardScreen(
     navigateToAuthScreen: () -> Unit,
 ) {
     var hasImage by remember { mutableStateOf(false) }
+    var hasDbInsert by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
 
@@ -81,6 +82,7 @@ fun DashboardScreen(
                         MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
                     viewModel.uploadImage(imageUri!!, Utils.getRequestData(bitmap))
                     hasImage = false
+                    imageUri = null
                 }
                 val refresh = receipts.loadState.refresh
                 when {
@@ -110,7 +112,6 @@ fun DashboardScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    hasImage = false
                     val uri = getTmpFileUri(context)
                     imageUri = uri
                     cameraLauncher.launch(imageUri)
@@ -137,7 +138,10 @@ fun DashboardScreen(
                 Log.e(TAG, "Url:- ${imageData.imageUrl.toString()}")
                 Log.e(TAG, "imageData:- ${imageData.imageData}")
                 LaunchedEffect(isImageAddedToStorage) {
-                    viewModel.addImageToDatabase(imageData)
+                    if (!imageData.isAdded) {
+                        viewModel.addImageToDatabase(imageData)
+                        imageData.isAdded = true
+                    }
                 }
             }
         }

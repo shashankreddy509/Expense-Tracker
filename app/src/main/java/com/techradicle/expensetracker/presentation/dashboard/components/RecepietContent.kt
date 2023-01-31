@@ -27,7 +27,7 @@ fun ReceiptContent(
         modifier = Modifier
             .padding(4.dp)
             .fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(3.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -44,15 +44,26 @@ fun ReceiptContent(
                     height = 64.dp,
                     padding = 8.dp
                 )
-                Text(
-                    text = createdAt.toString(),
-                    fontSize = 24.sp,
-                    color = Color.Black,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .fillMaxHeight()
-                )
+                Column {
+                    Text(
+                        text = storeName.toString(),
+                        fontSize = 24.sp,
+                        color = Color.Black,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .fillMaxHeight()
+                    )
+                    Text(
+                        text = createdAt.toString(),
+                        fontSize = 16.sp,
+                        color = Color.DarkGray,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .fillMaxHeight()
+                    )
+                }
             }
         }
     }
