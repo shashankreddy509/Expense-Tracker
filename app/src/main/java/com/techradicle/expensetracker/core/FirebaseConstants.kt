@@ -15,6 +15,7 @@ object FirebaseConstants {
     const val IMAGE_URL = "imageUrl"
     const val IMAGE_DATA = "imageData"
     const val UID = "uid"
+    const val ID = "id"
 
     //Paging Limit
     const val PAGE_SIZE = 8L

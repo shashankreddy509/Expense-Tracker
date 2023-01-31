@@ -18,6 +18,7 @@ import com.techradicle.expensetracker.core.AppConstants.FIREBASE_FUNCTION_ANNOTA
 import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
 import com.techradicle.expensetracker.core.AppConstants.TAG
 import com.techradicle.expensetracker.core.FirebaseConstants.CREATED_AT
+import com.techradicle.expensetracker.core.FirebaseConstants.ID
 import com.techradicle.expensetracker.core.FirebaseConstants.IMAGE_DATA
 import com.techradicle.expensetracker.core.FirebaseConstants.IMAGE_URL
 import com.techradicle.expensetracker.core.FirebaseConstants.PAGE_SIZE
@@ -46,7 +47,7 @@ class DashboardRepositoryImpl @Inject constructor(
 ) : DashboardRepository {
 
     var storageRef = storage.reference
-    var uidFirestoreRef = firestore.collection(RECEIPTS).document()
+    var firestorCollection = firestore.collection(RECEIPTS)
 
     override val user = User(
         uid = auth.currentUser?.uid ?: NO_VALUE,
@@ -109,12 +110,14 @@ class DashboardRepositoryImpl @Inject constructor(
 
     override suspend fun addImageToDatabase(imageData: ImageUploadData): Response<Boolean> {
         return try {
-            uidFirestoreRef.set(
+            val id = firestorCollection.document().id
+            firestorCollection.document(id).set(
                 mapOf(
                     IMAGE_URL to imageData.imageUrl,
                     CREATED_AT to FieldValue.serverTimestamp(),
                     IMAGE_DATA to imageData.imageData,
-                    UID to auth.currentUser!!.uid
+                    UID to auth.currentUser!!.uid,
+                    ID to id
                 )
             ).await()
             Success(true)

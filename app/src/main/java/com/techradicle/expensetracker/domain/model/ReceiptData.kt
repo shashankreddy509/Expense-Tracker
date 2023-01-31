@@ -8,5 +8,6 @@ data class ReceiptData(
     val createdAt: Date? = null,
     val imageUrl: String? = null,
     val imageData: String? = null,
-    val uid: String? = null
+    val uid: String? = null,
+    val id: String? = null
 )
