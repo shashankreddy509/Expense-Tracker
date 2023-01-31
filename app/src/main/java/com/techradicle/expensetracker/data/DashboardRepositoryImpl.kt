@@ -1,7 +1,6 @@
 package com.techradicle.expensetracker.data
 
 import android.net.Uri
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -16,7 +15,6 @@ import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.techradicle.expensetracker.core.AppConstants.FIREBASE_FUNCTION_ANNOTATE_IMAGE
 import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
-import com.techradicle.expensetracker.core.AppConstants.TAG
 import com.techradicle.expensetracker.core.FirebaseConstants.CREATED_AT
 import com.techradicle.expensetracker.core.FirebaseConstants.ID
 import com.techradicle.expensetracker.core.FirebaseConstants.IMAGE_DATA
@@ -47,7 +45,7 @@ class DashboardRepositoryImpl @Inject constructor(
 ) : DashboardRepository {
 
     var storageRef = storage.reference
-    var firestorCollection = firestore.collection(RECEIPTS)
+    var firestorCollectionWithDoc = firestore.collection(RECEIPTS).document()
 
     override val user = User(
         uid = auth.currentUser?.uid ?: NO_VALUE,
@@ -93,7 +91,6 @@ class DashboardRepositoryImpl @Inject constructor(
                     var paraText = ""
                     for (word in para.asJsonObject["words"].asJsonArray) {
                         var wordText = ""
-                        Log.e(TAG, word.toString())
                         for (symbol in word.asJsonObject["symbols"].asJsonArray) {
                             wordText += symbol.asJsonObject["text"].asString
                         }
@@ -110,8 +107,8 @@ class DashboardRepositoryImpl @Inject constructor(
 
     override suspend fun addImageToDatabase(imageData: ImageUploadData): Response<Boolean> {
         return try {
-            val id = firestorCollection.document().id
-            firestorCollection.document(id).set(
+            val id = firestorCollectionWithDoc.id
+            firestorCollectionWithDoc.set(
                 mapOf(
                     IMAGE_URL to imageData.imageUrl,
                     CREATED_AT to FieldValue.serverTimestamp(),
