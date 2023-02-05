@@ -12,11 +12,16 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storageMetadata
 import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
 import com.techradicle.expensetracker.core.FirebaseConstants.CREATED_AT
+import com.techradicle.expensetracker.core.FirebaseConstants.DATE
 import com.techradicle.expensetracker.core.FirebaseConstants.ID
 import com.techradicle.expensetracker.core.FirebaseConstants.IMAGE_DATA
 import com.techradicle.expensetracker.core.FirebaseConstants.IMAGE_URL
+import com.techradicle.expensetracker.core.FirebaseConstants.ITEMS
 import com.techradicle.expensetracker.core.FirebaseConstants.PAGE_SIZE
 import com.techradicle.expensetracker.core.FirebaseConstants.RECEIPTS
+import com.techradicle.expensetracker.core.FirebaseConstants.STORE_NAME
+import com.techradicle.expensetracker.core.FirebaseConstants.TIME
+import com.techradicle.expensetracker.core.FirebaseConstants.TOTAL
 import com.techradicle.expensetracker.core.FirebaseConstants.UID
 import com.techradicle.expensetracker.data.remote.OcrApi
 import com.techradicle.expensetracker.domain.model.ImageUploadData
@@ -62,14 +67,14 @@ class DashboardRepositoryImpl @Inject constructor(
         uri: Uri, filePath: String
     ): Response<ImageUploadData> {
         return try {
-            val metadata = storageMetadata { contentType = "image/png" }
-            val uidRef: StorageReference =
-                storageRef.child("${auth.currentUser!!.uid}/${Date().time}.png")
-            val downloadUrl = uidRef
-                .putFile(uri, metadata).await()
-                .storage.downloadUrl.await()
             val ocrData = getImageResponse(filePath)
             ocrData.data?.let {
+                val metadata = storageMetadata { contentType = "image/png" }
+                val uidRef: StorageReference =
+                    storageRef.child("${auth.currentUser!!.uid}/${Date().time}.png")
+                val downloadUrl = uidRef
+                    .putFile(uri, metadata).await()
+                    .storage.downloadUrl.await()
                 Success(ImageUploadData(downloadUrl, imageData = it))
             } ?: Failure(ocrData.e)
         } catch (e: Exception) {
@@ -80,13 +85,19 @@ class DashboardRepositoryImpl @Inject constructor(
     override suspend fun addImageToDatabase(imageData: ImageUploadData): Response<Boolean> {
         return try {
             val id = firestorCollection.document().id
+            val receipt = imageData.imageData.receipts[0]
             firestorCollection.document(id).set(
                 mapOf(
                     IMAGE_URL to imageData.imageUrl,
                     CREATED_AT to FieldValue.serverTimestamp(),
                     IMAGE_DATA to imageData.imageData,
                     UID to auth.currentUser!!.uid,
-                    ID to id
+                    ID to id,
+                    STORE_NAME to receipt.merchant_name,
+                    TOTAL to receipt.total,
+                    DATE to receipt.date,
+                    TIME to receipt.time,
+                    ITEMS to receipt.items
                 )
             ).await()
             Success(true)
@@ -130,6 +141,7 @@ class DashboardRepositoryImpl @Inject constructor(
                 )
             OcrData(response, null)
         } catch (e: Exception) {
+            e.printStackTrace()
             OcrData(null, e)
         }
     }

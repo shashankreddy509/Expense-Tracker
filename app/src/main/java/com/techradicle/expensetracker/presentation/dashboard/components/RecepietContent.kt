@@ -55,7 +55,7 @@ fun ReceiptContent(
                             .fillMaxHeight()
                     )
                     Text(
-                        text = createdAt.toString(),
+                        text = date.toString(),
                         fontSize = 16.sp,
                         color = Color.DarkGray,
                         textAlign = TextAlign.Start,

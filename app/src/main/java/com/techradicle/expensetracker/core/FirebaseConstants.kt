@@ -16,10 +16,11 @@ object FirebaseConstants {
     const val IMAGE_DATA = "imageData"
     const val UID = "uid"
     const val ID = "id"
-    const val WORDS = "words"
+    const val DATE = "date"
     const val STORE_NAME = "storeName"
-    const val CARD_NO = "cardNo"
+    const val TOTAL = "total"
     const val ITEMS = "items"
+    const val TIME = "time"
 
     //Paging Limit
     const val PAGE_SIZE = 8L
