@@ -11,6 +11,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storageMetadata
 import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
+import com.techradicle.expensetracker.core.FirebaseConstants.CARD_NO
 import com.techradicle.expensetracker.core.FirebaseConstants.CREATED_AT
 import com.techradicle.expensetracker.core.FirebaseConstants.DATE
 import com.techradicle.expensetracker.core.FirebaseConstants.ID
@@ -29,7 +30,7 @@ import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.domain.model.Response.Failure
 import com.techradicle.expensetracker.domain.model.Response.Success
 import com.techradicle.expensetracker.domain.model.User
-import com.techradicle.expensetracker.domain.model.ocr.OcrData
+import com.techradicle.expensetracker.domain.model.ocrdata.OcrData
 import com.techradicle.expensetracker.domain.repository.DashboardRepository
 import com.techradicle.expensetracker.domain.repository.SignOutResponse
 import kotlinx.coroutines.tasks.await
@@ -97,7 +98,8 @@ class DashboardRepositoryImpl @Inject constructor(
                     TOTAL to receipt.total,
                     DATE to receipt.date,
                     TIME to receipt.time,
-                    ITEMS to receipt.items
+                    ITEMS to receipt.items,
+                    CARD_NO to receipt.credit_card_number
                 )
             ).await()
             Success(true)

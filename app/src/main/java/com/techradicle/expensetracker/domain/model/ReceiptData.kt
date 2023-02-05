@@ -11,5 +11,14 @@ data class ReceiptData(
     val id: String? = null,
     val storeName: String? = null,
     val total: Double? = null,
-    val date: String? = null
+    val date: String? = null,
+    val items: List<Items>? = null,
+    val cardNo: String? = null
+)
+
+
+data class Items(
+    val amount: Double? = null,
+    val description: String? = null,
+    val qty: Double? = null
 )

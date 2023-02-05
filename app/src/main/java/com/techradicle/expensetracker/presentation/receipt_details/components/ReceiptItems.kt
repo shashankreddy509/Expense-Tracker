@@ -8,11 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.techradicle.expensetracker.domain.model.Items
 
 @Composable
-fun ReceiptItems(itemName: String) {
+fun ReceiptItems(item: Items) {
     Text(
-        text = itemName,
+        text = item.description!!,
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp, bottom = 8.dp),

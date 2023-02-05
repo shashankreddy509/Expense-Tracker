@@ -21,6 +21,7 @@ object FirebaseConstants {
     const val TOTAL = "total"
     const val ITEMS = "items"
     const val TIME = "time"
+    const val CARD_NO = "cardNo"
 
     //Paging Limit
     const val PAGE_SIZE = 8L

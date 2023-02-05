@@ -1,6 +1,6 @@
 package com.techradicle.expensetracker.data.remote
 
-import com.techradicle.expensetracker.domain.model.ocr.ImageDataList
+import com.techradicle.expensetracker.domain.model.ocrdata.OcrImageData
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Multipart
@@ -15,5 +15,5 @@ interface OcrApi {
         @Part file: MultipartBody.Part,
         @Part("api_key") api_key: RequestBody,
         @Part("recognizer") recognizer: RequestBody,
-    ): ImageDataList
+    ): OcrImageData
 }
