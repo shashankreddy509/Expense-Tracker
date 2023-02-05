@@ -14,7 +14,7 @@ typealias SignOutResponse = Response<Boolean>
 interface DashboardRepository {
     val user: User
 
-    suspend fun uploadImageToStorage(uri: Uri, requestJson: String): Response<ImageUploadData>
+    suspend fun uploadImageToStorage(uri: Uri, filePath: String): Response<ImageUploadData>
 
     suspend fun addImageToDatabase(imageData: ImageUploadData): Response<Boolean>
 

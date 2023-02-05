@@ -1,9 +1,7 @@
 package com.techradicle.expensetracker.presentation.dashboard
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,13 +27,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.techradicle.expensetracker.BuildConfig
 import com.techradicle.expensetracker.R
 import com.techradicle.expensetracker.components.AppTopBar
-import com.techradicle.expensetracker.components.AuthTopBar
 import com.techradicle.expensetracker.components.ProgressBar
 import com.techradicle.expensetracker.components.layouts.HorizontalContent
 import com.techradicle.expensetracker.core.AppConstants.DASHBOARD
 import com.techradicle.expensetracker.core.AppConstants.NO_RECORDS
 import com.techradicle.expensetracker.core.AppConstants.TAG
-import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.presentation.dashboard.components.SignOut
 import java.io.File
@@ -49,8 +45,8 @@ fun DashboardScreen(
     navigateToAuthScreen: () -> Unit,
 ) {
     var hasImage by remember { mutableStateOf(false) }
-    var hasDbInsert by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var fileUrl by remember { mutableStateOf("") }
     val context = LocalContext.current
 
     val cameraLauncher = rememberLauncherForActivityResult(
@@ -60,7 +56,44 @@ fun DashboardScreen(
         }
     )
 
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            hasImage = uri != null
+            imageUri = uri
+        }
+    )
+
+    fun getTmpFileUri(context: Context): Uri {
+        val tmpFile =
+            File.createTempFile("${Date().time}", ".png", context.filesDir).apply {
+                createNewFile()
+//            deleteOnExit()
+            }
+        fileUrl = tmpFile.path
+        return FileProvider.getUriForFile(
+            context,
+            "${BuildConfig.APPLICATION_ID}.provider",
+            tmpFile
+        )
+    }
+
+//    var multiFloatingState by remember { mutableStateOf(MultiFloatingState.Collapsed) }
+
     val receipts = viewModel.getReceipts().collectAsLazyPagingItems()
+
+//    val fabItems = listOf(
+//        MinFabItems(
+//            icon = ImageBitmap.imageResource(id = Icons.Default.Warning),
+//            lable = "Camera",
+//            identifier = "Camera"
+//        ),
+//        MinFabItems(
+//            icon = ImageBitmap.imageResource(id = Icons.Filled.ShoppingCart),
+//            lable = "Camera",
+//            identifier = "Camera"
+//        )
+//    )
 
     Scaffold(
         topBar = {
@@ -78,9 +111,7 @@ fun DashboardScreen(
                     .padding(padding)
             ) {
                 if (hasImage && imageUri != null) {
-                    val bitmap: Bitmap =
-                        MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
-                    viewModel.uploadImage(imageUri!!, Utils.getRequestData(bitmap))
+                    viewModel.uploadImage(imageUri!!, fileUrl)
                     hasImage = false
                     imageUri = null
                 }
@@ -110,6 +141,14 @@ fun DashboardScreen(
             }
         },
         floatingActionButton = {
+//            MultiFloatingButton(
+//                multiFloatingState = multiFloatingState,
+//                onMultiFabStateChange = {
+//                    multiFloatingState = it
+//                },
+//                items = fabItems
+//            )
+
             FloatingActionButton(
                 onClick = {
                     val uri = getTmpFileUri(context)
@@ -149,18 +188,4 @@ fun DashboardScreen(
             print(addImageToStorageResponse.e)
         }
     }
-}
-
-fun getTmpFileUri(context: Context): Uri {
-    val tmpFile =
-        File.createTempFile("tmp_image_file_${Date().time}", ".png", context.cacheDir).apply {
-            createNewFile()
-            deleteOnExit()
-        }
-
-    return FileProvider.getUriForFile(
-        context,
-        "${BuildConfig.APPLICATION_ID}.provider",
-        tmpFile
-    )
 }

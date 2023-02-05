@@ -12,17 +12,17 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import com.techradicle.expensetracker.R
+import com.techradicle.expensetracker.core.AppConstants.BASE_URL
 import com.techradicle.expensetracker.core.AppConstants.SIGN_IN_REQUEST
 import com.techradicle.expensetracker.core.AppConstants.SIGN_UP_REQUEST
 import com.techradicle.expensetracker.core.FirebaseConstants.PAGE_SIZE
 import com.techradicle.expensetracker.data.AuthRepositoryImpl
 import com.techradicle.expensetracker.data.DashboardRepositoryImpl
+import com.techradicle.expensetracker.data.remote.OcrApi
 import com.techradicle.expensetracker.data.ReceiptDetailsRepositoryImpl
 import com.techradicle.expensetracker.domain.repository.AuthRepository
 import com.techradicle.expensetracker.domain.repository.DashboardRepository
@@ -32,7 +32,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -50,9 +53,6 @@ object AppModule {
 
     @Provides
     fun providesStorage() = Firebase.storage
-
-    @Provides
-    fun providesFunctions() = Firebase.functions
 
     @Provides
     fun provideOneTapClient(
@@ -120,15 +120,15 @@ object AppModule {
         oneTapClient: SignInClient,
         storage: FirebaseStorage,
         firestore: FirebaseFirestore,
-        functions: FirebaseFunctions,
-        config: PagingConfig
+        config: PagingConfig,
+        api: OcrApi
     ): DashboardRepository = DashboardRepositoryImpl(
         auth = auth,
         oneTapClient = oneTapClient,
         storage = storage,
         firestore = firestore,
-        functions = functions,
-        config = config
+        config = config,
+        api = api
     )
 
     @Provides
@@ -138,6 +138,15 @@ object AppModule {
         firebaseFirestore = firestore
     )
 
+    @Singleton
+    @Provides
+    fun providesOcrApi(): OcrApi {
+        return Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .build()
+            .create(OcrApi::class.java)
+    }
 
     @Provides
     fun providePagingConfig() = PagingConfig(

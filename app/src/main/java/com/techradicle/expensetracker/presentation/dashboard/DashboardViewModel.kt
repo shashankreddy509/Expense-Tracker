@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val repo: DashboardRepository
+    private val repo: DashboardRepository,
 ) : ViewModel() {
     val user = repo.user
 
@@ -27,9 +27,9 @@ class DashboardViewModel @Inject constructor(
     var signOutResponse by mutableStateOf<SignOutResponse>(Response.Success(false))
         private set
 
-    fun uploadImage(uri: Uri, requestJson: String) = viewModelScope.launch {
+    fun uploadImage(uri: Uri, filePath: String) = viewModelScope.launch {
         imageUrl = Response.Loading
-        imageUrl = repo.uploadImageToStorage(uri, requestJson)
+        imageUrl = repo.uploadImageToStorage(uri = uri, filePath = filePath)
     }
 
     fun addImageToDatabase(imageData: ImageUploadData) = viewModelScope.launch {

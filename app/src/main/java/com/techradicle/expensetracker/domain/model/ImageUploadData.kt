@@ -1,11 +1,10 @@
 package com.techradicle.expensetracker.domain.model
 
 import android.net.Uri
+import com.techradicle.expensetracker.domain.model.ocr.ImageDataList
 
 data class ImageUploadData(
     val imageUrl: Uri,
-    val imageData: String,
-    val words: List<String>,
-    val cardNo: String,
-    var isAdded: Boolean = false
+    var isAdded: Boolean = false,
+    var imageData: ImageDataList
 )

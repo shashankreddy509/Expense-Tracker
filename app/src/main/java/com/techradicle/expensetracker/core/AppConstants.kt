@@ -20,9 +20,6 @@ object AppConstants {
     const val DASHBOARD_SCREEN = "dashboard"
     const val RECEIPT_DETAILS_SCREEN = "receipt_details"
 
-    //Function - names
-    const val FIREBASE_FUNCTION_ANNOTATE_IMAGE = "annotateImage"
-
     //Empty Value
     const val NO_VALUE = ""
 
@@ -37,4 +34,7 @@ object AppConstants {
 
     //Arguments
     const val RECEIPT_ID = "receiptId"
+
+    //BASE_URL
+    const val BASE_URL = "https://ocr.asprise.com/api/v1/"
 }
