@@ -15,6 +15,11 @@ object AppConstants {
     //Buttons
     const val SIGN_IN_WITH_GOOGLE = "Sign in with Google"
 
+    //Menu Items
+    const val HOME = "Home"
+    const val SETTINGS = "Settings"
+    const val SIGN_OUT = "Sign-out"
+
     //Screens
     const val AUTH_SCREEN = "auth"
     const val DASHBOARD_SCREEN = "dashboard"

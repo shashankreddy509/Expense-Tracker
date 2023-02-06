@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.techradicle.expensetracker.core.Utils.Companion.items
 import com.techradicle.expensetracker.domain.model.ImageUploadData
 import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.domain.repository.DashboardRepository
@@ -20,6 +21,8 @@ class DashboardViewModel @Inject constructor(
     private val repo: DashboardRepository,
 ) : ViewModel() {
     val user = repo.user
+
+    var selectedItem by mutableStateOf(items[0])
 
     var imageUrl by mutableStateOf<Response<ImageUploadData>>(Response.Success(null))
         private set

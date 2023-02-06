@@ -3,15 +3,16 @@ package com.techradicle.expensetracker.components
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import com.techradicle.expensetracker.R
+import com.techradicle.expensetracker.components.icons.NavigationIcon
 
 @ExperimentalMaterial3Api
 @Composable
-fun AuthTopBar(title: String,) {
+fun DrawerTopBar(
+    openNavigationDrawer: () -> Unit,
+    title: String
+) {
     TopAppBar(
         title = {
             Text(
@@ -19,14 +20,11 @@ fun AuthTopBar(title: String,) {
                 color = Color.White
             )
         },
+        navigationIcon = {
+            NavigationIcon(
+                openNavigationDrawer = openNavigationDrawer
+            )
+        },
         colors = getTopBarColors()
     )
 }
-
-@Composable
-@ExperimentalMaterial3Api
-fun getTopBarColors() = TopAppBarDefaults.smallTopAppBarColors(
-    containerColor = colorResource(R.color.primary),
-    navigationIconContentColor = Color.White,
-    actionIconContentColor = Color.White
-)

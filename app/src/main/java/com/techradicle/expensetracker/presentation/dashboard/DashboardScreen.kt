@@ -25,13 +25,17 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.techradicle.expensetracker.BuildConfig
 import com.techradicle.expensetracker.R
-import com.techradicle.expensetracker.components.AppTopBar
+import com.techradicle.expensetracker.components.DrawerTopBar
 import com.techradicle.expensetracker.components.ProgressBar
 import com.techradicle.expensetracker.components.layouts.HorizontalContent
 import com.techradicle.expensetracker.core.AppConstants.DASHBOARD
 import com.techradicle.expensetracker.core.AppConstants.NO_RECORDS
+import com.techradicle.expensetracker.core.Utils.Companion.items
 import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.presentation.dashboard.components.SignOut
+import com.techradicle.expensetracker.presentation.dashboard.components.drawer.DrawerContent
+import com.techradicle.expensetracker.presentation.dashboard.components.drawer.draweritems.DrawerItemSettings
+import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
 
@@ -76,90 +80,98 @@ fun DashboardScreen(
         )
     }
 
-//    var multiFloatingState by remember { mutableStateOf(MultiFloatingState.Collapsed) }
-
     val receipts = viewModel.getReceipts().collectAsLazyPagingItems()
 
-//    val fabItems = listOf(
-//        MinFabItems(
-//            icon = ImageBitmap.imageResource(id = Icons.Default.Warning),
-//            lable = "Camera",
-//            identifier = "Camera"
-//        ),
-//        MinFabItems(
-//            icon = ImageBitmap.imageResource(id = Icons.Filled.ShoppingCart),
-//            lable = "Camera",
-//            identifier = "Camera"
-//        )
-//    )
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val coroutineScope = rememberCoroutineScope()
 
-    Scaffold(
-        topBar = {
-            AppTopBar(
-                title = DASHBOARD,
-                navigateToAuthScreen = {
-                    viewModel.signOut()
-                }
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            DrawerContent(
+                drawerState = drawerState,
+                coroutineScope = coroutineScope,
+                user = viewModel.user
             )
         },
-        content = { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            ) {
-                if (hasImage && imageUri != null) {
-                    viewModel.uploadImage(imageUri!!, fileUrl)
-                    hasImage = false
-                    imageUri = null
-                }
-                val refresh = receipts.loadState.refresh
-                when {
-                    refresh is LoadState.Loading -> ProgressBar()
-                    receipts.itemCount > 0 -> {
-                        HorizontalContent(
-                            receiptsPaging = viewModel.getReceipts().collectAsLazyPagingItems(),
-                            navigateToReceiptDetailsScreen = navigateToReceiptDetailsScreen
-                        )
-                    }
-                    receipts.itemCount == 0 -> {
-                        Text(
-                            text = NO_RECORDS,
-                            fontSize = 24.sp,
-                            color = Color.Black,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .fillMaxHeight()
-                        )
-                    }
-                    refresh is LoadState.Error -> print(refresh)
-                }
-
-            }
-        },
-        floatingActionButton = {
-//            MultiFloatingButton(
-//                multiFloatingState = multiFloatingState,
-//                onMultiFabStateChange = {
-//                    multiFloatingState = it
-//                },
-//                items = fabItems
-//            )
-
-            FloatingActionButton(
-                onClick = {
-                    val uri = getTmpFileUri(context)
-                    imageUri = uri
-                    cameraLauncher.launch(imageUri)
+        content = {
+            Scaffold(
+                topBar = {
+                    DrawerTopBar(
+                        openNavigationDrawer = {
+                            coroutineScope.launch {
+                                drawerState.open()
+                            }
+                        },
+                        title = DASHBOARD
+                    )
                 },
-                containerColor = colorResource(id = R.color.primary_dark),
-                shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50))
-            ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = Color.White)
-            }
-        }
-    )
+                content = { padding ->
+
+                    when (viewModel.selectedItem) {
+                        items[0] -> {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(padding)
+                            ) {
+                                if (hasImage && imageUri != null) {
+                                    viewModel.uploadImage(imageUri!!, fileUrl)
+                                    hasImage = false
+                                    imageUri = null
+                                }
+                                val refresh = receipts.loadState.refresh
+                                when {
+                                    refresh is LoadState.Loading -> ProgressBar()
+                                    receipts.itemCount > 0 -> {
+                                        HorizontalContent(
+                                            receiptsPaging = viewModel.getReceipts()
+                                                .collectAsLazyPagingItems(),
+                                            navigateToReceiptDetailsScreen = navigateToReceiptDetailsScreen
+                                        )
+                                    }
+                                    receipts.itemCount == 0 -> {
+                                        Text(
+                                            text = NO_RECORDS,
+                                            fontSize = 24.sp,
+                                            color = Color.Black,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .fillMaxHeight()
+                                        )
+                                    }
+                                    refresh is LoadState.Error -> print(refresh)
+                                }
+                            }
+                        }
+                        items[1] -> {
+                            DrawerItemSettings(padding)
+                        }
+                        items[2] -> viewModel.signOut()
+                    }
+                },
+                floatingActionButton = {
+                    when (viewModel.selectedItem) {
+                        items[0] -> FloatingActionButton(
+                            onClick = {
+                                val uri = getTmpFileUri(context)
+                                imageUri = uri
+                                cameraLauncher.launch(imageUri)
+                            },
+                            containerColor = colorResource(id = R.color.primary_dark),
+                            shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50))
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+                    }
+                }
+            )
+        })
 
     SignOut { signedOut ->
         if (signedOut) {

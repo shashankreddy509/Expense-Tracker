@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.common.api.ApiException
@@ -25,7 +26,7 @@ fun AuthScreen(
 ) {
     Scaffold(
         topBar = {
-            AuthTopBar(R.string.app_name)
+            AuthTopBar(stringResource(id = R.string.app_name))
         },
         content = { padding ->
             AuthContent(
