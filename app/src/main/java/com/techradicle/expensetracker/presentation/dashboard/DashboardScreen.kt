@@ -2,7 +2,6 @@ package com.techradicle.expensetracker.presentation.dashboard
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -31,7 +30,6 @@ import com.techradicle.expensetracker.components.ProgressBar
 import com.techradicle.expensetracker.components.layouts.HorizontalContent
 import com.techradicle.expensetracker.core.AppConstants.DASHBOARD
 import com.techradicle.expensetracker.core.AppConstants.NO_RECORDS
-import com.techradicle.expensetracker.core.AppConstants.TAG
 import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.presentation.dashboard.components.SignOut
 import java.io.File
@@ -174,8 +172,6 @@ fun DashboardScreen(
         is Response.Success -> {
             val isImageAddedToStorage = addImageToStorageResponse.data
             isImageAddedToStorage?.let { imageData ->
-                Log.e(TAG, "Url:- ${imageData.imageUrl.toString()}")
-                Log.e(TAG, "imageData:- ${imageData.imageData}")
                 LaunchedEffect(isImageAddedToStorage) {
                     if (!imageData.isAdded) {
                         viewModel.addImageToDatabase(imageData)

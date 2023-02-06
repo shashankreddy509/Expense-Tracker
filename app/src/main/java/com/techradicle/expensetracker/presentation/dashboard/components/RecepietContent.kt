@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.techradicle.expensetracker.components.icons.ThumbImage
 import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
+import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.domain.model.ReceiptData
 
 @ExperimentalMaterial3Api
@@ -49,20 +50,35 @@ fun ReceiptContent(
                         text = storeName.toString(),
                         fontSize = 24.sp,
                         color = Color.Black,
+                        maxLines = 1,
                         textAlign = TextAlign.Start,
                         modifier = Modifier
                             .fillMaxSize()
                             .fillMaxHeight()
                     )
-                    Text(
-                        text = date.toString(),
-                        fontSize = 16.sp,
-                        color = Color.DarkGray,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .fillMaxHeight()
-                    )
+                    Row {
+                        val dateCorrect = date?.let {
+                            Utils.getCorrectDate(it, createdAt!!)
+                        } ?: Utils.dateFormatter(createdAt!!)
+                        Text(
+                            text = "Date: $dateCorrect",
+                            fontSize = 16.sp,
+                            color = Color.DarkGray,
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier
+                                .weight(0.5f)
+                                .fillMaxHeight()
+                        )
+                        Text(
+                            text = "Amount: $${total.toString()}",
+                            fontSize = 16.sp,
+                            color = Color.DarkGray,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier
+                                .padding(end = 16.dp)
+                                .fillMaxHeight()
+                        )
+                    }
                 }
             }
         }
