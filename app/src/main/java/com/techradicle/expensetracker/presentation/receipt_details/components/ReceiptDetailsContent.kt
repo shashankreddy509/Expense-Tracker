@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.techradicle.expensetracker.components.ShortDivider
+import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
 import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.presentation.receipt_details.ReceiptDetailsViewModel
 
@@ -24,7 +26,8 @@ import com.techradicle.expensetracker.presentation.receipt_details.ReceiptDetail
 fun ReceiptDetailContent(
     receiptID: String,
     padding: PaddingValues,
-    receiptDetailsViewModel: ReceiptDetailsViewModel = hiltViewModel()
+    receiptDetailsViewModel: ReceiptDetailsViewModel = hiltViewModel(),
+    name: MutableState<String>
 ) {
     LaunchedEffect(key1 = receiptID) {
         receiptDetailsViewModel.getReceipt(receiptId = receiptID)
@@ -42,6 +45,7 @@ fun ReceiptDetailContent(
                     .weight(1f)
             ) {
                 receipt.apply {
+                    name.value = fileName ?: NO_VALUE
                     Box(contentAlignment = Alignment.TopEnd) {
                         //Place Image here
                         AsyncImage(

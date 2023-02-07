@@ -133,9 +133,11 @@ object AppModule {
 
     @Provides
     fun providesReceiptDetailsRepository(
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
+        storage: FirebaseStorage,
     ): ReceiptDetailsRepository = ReceiptDetailsRepositoryImpl(
-        firebaseFirestore = firestore
+        firebaseFirestore = firestore,
+        storage = storage
     )
 
     @Singleton

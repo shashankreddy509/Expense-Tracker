@@ -13,7 +13,8 @@ data class ReceiptData(
     val total: Double? = null,
     val date: String? = null,
     val items: List<Items>? = null,
-    val cardNo: String? = null
+    val cardNo: String? = null,
+    val fileName: String? = null
 )
 
 

@@ -14,6 +14,7 @@ import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
 import com.techradicle.expensetracker.core.FirebaseConstants.CARD_NO
 import com.techradicle.expensetracker.core.FirebaseConstants.CREATED_AT
 import com.techradicle.expensetracker.core.FirebaseConstants.DATE
+import com.techradicle.expensetracker.core.FirebaseConstants.FILE_NAME
 import com.techradicle.expensetracker.core.FirebaseConstants.ID
 import com.techradicle.expensetracker.core.FirebaseConstants.IMAGE_DATA
 import com.techradicle.expensetracker.core.FirebaseConstants.IMAGE_URL
@@ -70,13 +71,14 @@ class DashboardRepositoryImpl @Inject constructor(
         return try {
             val ocrData = getImageResponse(filePath)
             ocrData.data?.let {
+                val imageFile = "${auth.currentUser!!.uid}/${Date().time}.png"
                 val metadata = storageMetadata { contentType = "image/png" }
                 val uidRef: StorageReference =
-                    storageRef.child("${auth.currentUser!!.uid}/${Date().time}.png")
+                    storageRef.child(imageFile)
                 val downloadUrl = uidRef
                     .putFile(uri, metadata).await()
                     .storage.downloadUrl.await()
-                Success(ImageUploadData(downloadUrl, imageData = it))
+                Success(ImageUploadData(downloadUrl, imageData = it, imageName = imageFile))
             } ?: Failure(ocrData.e)
         } catch (e: Exception) {
             Failure(e)
@@ -99,7 +101,8 @@ class DashboardRepositoryImpl @Inject constructor(
                     DATE to receipt.date,
                     TIME to receipt.time,
                     ITEMS to receipt.items,
-                    CARD_NO to receipt.credit_card_number
+                    CARD_NO to receipt.credit_card_number,
+                    FILE_NAME to imageData.imageName
                 )
             ).await()
             Success(true)
