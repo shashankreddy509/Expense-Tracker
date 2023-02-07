@@ -2,6 +2,7 @@ package com.techradicle.expensetracker.navigation
 
 import com.techradicle.expensetracker.core.AppConstants.AUTH_SCREEN
 import com.techradicle.expensetracker.core.AppConstants.DASHBOARD_SCREEN
+import com.techradicle.expensetracker.core.AppConstants.EDIT_RECEIPT_DETAILS_SCREEN
 import com.techradicle.expensetracker.core.AppConstants.RECEIPT_DETAILS_SCREEN
 
 sealed class Screen(val route: String) {
@@ -13,4 +14,6 @@ sealed class Screen(val route: String) {
 
     //Receipt Details Screen
     object ReceiptDetailsScreen : Screen(RECEIPT_DETAILS_SCREEN)
+
+    object ReceiptEditScreen : Screen(EDIT_RECEIPT_DETAILS_SCREEN)
 }

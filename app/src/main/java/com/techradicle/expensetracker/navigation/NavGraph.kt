@@ -16,6 +16,7 @@ import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
 import com.techradicle.expensetracker.core.AppConstants.RECEIPT_ID
 import com.techradicle.expensetracker.presentation.auth.AuthScreen
 import com.techradicle.expensetracker.presentation.dashboard.DashboardScreen
+import com.techradicle.expensetracker.presentation.edit_receipt.EditReceiptDetails
 import com.techradicle.expensetracker.presentation.receipt_details.ReceiptDetailsScreen
 
 @ExperimentalMaterial3Api
@@ -58,6 +59,21 @@ fun NavGraph(
             )) { backStackEntry ->
             val receiptId = backStackEntry.arguments?.getString(RECEIPT_ID) ?: NO_VALUE
             ReceiptDetailsScreen(
+                receiptId = receiptId,
+                navigateBack = { direction.navigateBack() },
+                onEditIconClick = { id ->
+                    direction.navigateToReceiptEditScreen(id)
+                }
+            )
+        }
+        composable(route = "${Screen.ReceiptEditScreen.route}/{$RECEIPT_ID}",
+            arguments = listOf(
+                navArgument(RECEIPT_ID) {
+                    type = NavType.StringType
+                }
+            )) { backStackEntry ->
+            val receiptId = backStackEntry.arguments?.getString(RECEIPT_ID) ?: NO_VALUE
+            EditReceiptDetails(
                 receiptId = receiptId,
                 navigateBack = { direction.navigateBack() }
             )

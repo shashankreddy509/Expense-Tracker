@@ -11,9 +11,15 @@ object AppConstants {
 
     //Text
     const val NO_RECORDS = "No Records"
+    const val ALERT = "Alert!"
+    const val DELETE_RECEIPT = "Are you sure you want to delete this receipt"
+    const val UPDATE_RECEIPT = "Are you sure you want to update this receipt"
+    const val YES = "Yes"
+    const val NO = "No"
 
     //Buttons
     const val SIGN_IN_WITH_GOOGLE = "Sign in with Google"
+    const val UPDATE = "Update"
 
     //Menu Items
     const val HOME = "Home"
@@ -24,18 +30,21 @@ object AppConstants {
     const val AUTH_SCREEN = "auth"
     const val DASHBOARD_SCREEN = "dashboard"
     const val RECEIPT_DETAILS_SCREEN = "receipt_details"
+    const val EDIT_RECEIPT_DETAILS_SCREEN = "edit_receipt_details"
 
     //Empty Value
     const val NO_VALUE = ""
 
     //App Bar title
     const val RECEIPTS_DETAILS = "Receipt Details"
+    const val EDIT_RECEIPTS_DETAILS = "Edit Receipt Details"
     const val DASHBOARD = "Dashboard"
 
 
     //Content Descriptions
     const val GO_BACK = "back"
-    const val LOGOUT = "Logout"
+    const val EDIT = "Edit"
+    const val DELETE = "Delete"
 
     //Arguments
     const val RECEIPT_ID = "receiptId"

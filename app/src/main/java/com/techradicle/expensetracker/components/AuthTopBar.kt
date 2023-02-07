@@ -11,7 +11,7 @@ import com.techradicle.expensetracker.R
 
 @ExperimentalMaterial3Api
 @Composable
-fun AuthTopBar(title: String,) {
+fun AuthTopBar(title: String) {
     TopAppBar(
         title = {
             Text(

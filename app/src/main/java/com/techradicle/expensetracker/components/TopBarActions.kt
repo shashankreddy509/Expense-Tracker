@@ -1,11 +1,16 @@
 package com.techradicle.expensetracker.components
 
 import androidx.compose.runtime.Composable
-import com.techradicle.expensetracker.components.icons.Logout
+import com.techradicle.expensetracker.components.icons.DeleteIcon
+import com.techradicle.expensetracker.components.icons.EditIcon
 
 @Composable
 fun TopBarActions(
-    navigateToAuthScreen: () -> Unit
+    onEditIconClick: (receiptId: String) -> Unit,
+    receiptId: String,
+    onDeleteIconClick: () -> Unit
 ) {
-    Logout(navigateToAuthScreen= navigateToAuthScreen)
+    EditIcon(onEditIconClick, receiptId)
+    DeleteIcon(onDeleteIconClick)
+
 }
