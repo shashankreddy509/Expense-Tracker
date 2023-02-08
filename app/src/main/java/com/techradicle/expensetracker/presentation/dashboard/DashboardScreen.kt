@@ -9,15 +9,23 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,12 +41,14 @@ import com.techradicle.expensetracker.core.AppConstants.NO_RECORDS
 import com.techradicle.expensetracker.core.Utils.Companion.items
 import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.presentation.dashboard.components.SignOut
+import com.techradicle.expensetracker.presentation.dashboard.components.bottomsheet.ExpenseBottomSheetContent
 import com.techradicle.expensetracker.presentation.dashboard.components.drawer.DrawerContent
 import com.techradicle.expensetracker.presentation.dashboard.components.drawer.draweritems.DrawerItemSettings
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
 
+@ExperimentalMaterialApi
 @ExperimentalMaterial3Api
 @Composable
 fun DashboardScreen(
@@ -82,96 +92,134 @@ fun DashboardScreen(
 
     val receipts = viewModel.getReceipts().collectAsLazyPagingItems()
 
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberBottomSheetState(
+            initialValue = BottomSheetValue.Collapsed
+        )
+    )
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            DrawerContent(
-                drawerState = drawerState,
-                coroutineScope = coroutineScope,
-                user = viewModel.user
-            )
-        },
-        content = {
-            Scaffold(
-                topBar = {
-                    DrawerTopBar(
-                        openNavigationDrawer = {
-                            coroutineScope.launch {
-                                drawerState.open()
-                            }
-                        },
-                        title = DASHBOARD
-                    )
-                },
-                content = { padding ->
-
-                    when (viewModel.selectedItem) {
-                        items[0] -> {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(padding)
-                            ) {
-                                if (hasImage && imageUri != null) {
-                                    viewModel.uploadImage(imageUri!!, fileUrl)
-                                    hasImage = false
-                                    imageUri = null
-                                }
-                                val refresh = receipts.loadState.refresh
-                                when {
-                                    refresh is LoadState.Loading -> ProgressBar()
-                                    receipts.itemCount > 0 -> {
-                                        HorizontalContent(
-                                            receiptsPaging = viewModel.getReceipts()
-                                                .collectAsLazyPagingItems(),
-                                            navigateToReceiptDetailsScreen = navigateToReceiptDetailsScreen
-                                        )
-                                    }
-                                    receipts.itemCount == 0 -> {
-                                        Text(
-                                            text = NO_RECORDS,
-                                            fontSize = 24.sp,
-                                            color = Color.Black,
-                                            textAlign = TextAlign.Center,
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .fillMaxHeight()
-                                        )
-                                    }
-                                    refresh is LoadState.Error -> print(refresh)
-                                }
-                            }
-                        }
-                        items[1] -> {
-                            DrawerItemSettings(padding)
-                        }
-                        items[2] -> viewModel.signOut()
+    BottomSheetScaffold(
+        sheetContent = {
+            ExpenseBottomSheetContent(
+                onCameraClicked = {
+                    coroutineScope.launch {
+                        bottomSheetScaffoldState.bottomSheetState.collapse()
                     }
+                    val uri = getTmpFileUri(context)
+                    imageUri = uri
+                    cameraLauncher.launch(imageUri)
                 },
-                floatingActionButton = {
-                    when (viewModel.selectedItem) {
-                        items[0] -> FloatingActionButton(
-                            onClick = {
-                                val uri = getTmpFileUri(context)
-                                imageUri = uri
-                                cameraLauncher.launch(imageUri)
-                            },
-                            containerColor = colorResource(id = R.color.primary_dark),
-                            shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50))
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
-                        }
+                onStorageClicked = {
+                    coroutineScope.launch {
+                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                    }
+                    imagePicker.launch("image/*")
+                },
+                onManualClicked = {
+                    coroutineScope.launch {
+                        bottomSheetScaffoldState.bottomSheetState.collapse()
                     }
                 }
             )
-        })
+        },
+        scaffoldState = bottomSheetScaffoldState,
+        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+        sheetBackgroundColor = colorResource(id = R.color.primary),
+        sheetPeekHeight = 0.dp
+    ) {
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                DrawerContent(
+                    drawerState = drawerState,
+                    coroutineScope = coroutineScope,
+                    user = viewModel.user
+                )
+            },
+            content = {
+                Scaffold(
+                    topBar = {
+                        DrawerTopBar(
+                            openNavigationDrawer = {
+                                coroutineScope.launch {
+                                    drawerState.open()
+                                }
+                            },
+                            title = DASHBOARD
+                        )
+                    },
+                    content = { padding ->
+
+                        when (viewModel.selectedItem) {
+                            items[0] -> {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(padding)
+                                ) {
+                                    if (hasImage && imageUri != null) {
+                                        viewModel.uploadImage(imageUri!!, fileUrl)
+                                        hasImage = false
+                                        imageUri = null
+                                    }
+                                    val refresh = receipts.loadState.refresh
+                                    when {
+                                        refresh is LoadState.Loading -> ProgressBar()
+                                        receipts.itemCount > 0 -> {
+                                            HorizontalContent(
+                                                receiptsPaging = viewModel.getReceipts()
+                                                    .collectAsLazyPagingItems(),
+                                                navigateToReceiptDetailsScreen = navigateToReceiptDetailsScreen
+                                            )
+                                        }
+                                        receipts.itemCount == 0 -> {
+                                            Text(
+                                                text = NO_RECORDS,
+                                                fontSize = 24.sp,
+                                                color = Color.Black,
+                                                textAlign = TextAlign.Center,
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .fillMaxHeight()
+                                            )
+                                        }
+                                        refresh is LoadState.Error -> print(refresh)
+                                    }
+                                }
+                            }
+                            items[1] -> {
+                                DrawerItemSettings(padding)
+                            }
+                            items[2] -> viewModel.signOut()
+                        }
+                    },
+                    floatingActionButton = {
+                        when (viewModel.selectedItem) {
+                            items[0] -> FloatingActionButton(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                                            bottomSheetScaffoldState.bottomSheetState.expand()
+                                        }
+                                    }
+                                },
+                                containerColor = colorResource(id = R.color.primary_dark),
+                                shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50))
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            }
+                        }
+                    }
+                )
+            }
+        )
+    }
 
     SignOut { signedOut ->
         if (signedOut) {
