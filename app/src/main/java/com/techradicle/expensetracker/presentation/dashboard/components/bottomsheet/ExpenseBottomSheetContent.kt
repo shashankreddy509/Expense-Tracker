@@ -2,9 +2,7 @@ package com.techradicle.expensetracker.presentation.dashboard.components.bottoms
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 
 @Composable
@@ -15,17 +13,17 @@ fun ExpenseBottomSheetContent(
 ) {
     Column {
         ExpenseBottomSheetListItem(
-            icon = Icons.Default.List,
+            icon = Icons.Default.Camera,
             title = "Camera",
             onItemClick = onCameraClicked
         )
         ExpenseBottomSheetListItem(
-            icon = Icons.Default.Person,
+            icon = Icons.Default.Image,
             title = "Storage",
             onItemClick = onStorageClicked
         )
         ExpenseBottomSheetListItem(
-            icon = Icons.Default.CheckCircle,
+            icon = Icons.Default.Person,
             title = "Manual",
             onItemClick = onManualClicked
         )
