@@ -55,6 +55,7 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel(),
     navigateToReceiptDetailsScreen: (receiptId: String) -> Unit,
     navigateToAuthScreen: () -> Unit,
+    navigateToReceiptManualScreen: () -> Unit
 ) {
     var hasImage by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
@@ -120,6 +121,7 @@ fun DashboardScreen(
                 onManualClicked = {
                     coroutineScope.launch {
                         bottomSheetScaffoldState.bottomSheetState.collapse()
+                        navigateToReceiptManualScreen()
                     }
                 }
             )

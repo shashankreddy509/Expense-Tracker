@@ -22,10 +22,12 @@ import com.techradicle.expensetracker.core.AppConstants.SIGN_UP_REQUEST
 import com.techradicle.expensetracker.core.FirebaseConstants.PAGE_SIZE
 import com.techradicle.expensetracker.data.AuthRepositoryImpl
 import com.techradicle.expensetracker.data.DashboardRepositoryImpl
+import com.techradicle.expensetracker.data.ManualEntryRepositoryImpl
 import com.techradicle.expensetracker.data.remote.OcrApi
 import com.techradicle.expensetracker.data.ReceiptDetailsRepositoryImpl
 import com.techradicle.expensetracker.domain.repository.AuthRepository
 import com.techradicle.expensetracker.domain.repository.DashboardRepository
+import com.techradicle.expensetracker.domain.repository.ManualEntryRepository
 import com.techradicle.expensetracker.domain.repository.ReceiptDetailsRepository
 import dagger.Module
 import dagger.Provides
@@ -149,6 +151,13 @@ object AppModule {
             .build()
             .create(OcrApi::class.java)
     }
+
+    @Provides
+    fun provideManualEntryRepository(
+        firestore: FirebaseFirestore
+    ): ManualEntryRepository = ManualEntryRepositoryImpl(
+        firestore = firestore
+    )
 
     @Provides
     fun providePagingConfig() = PagingConfig(

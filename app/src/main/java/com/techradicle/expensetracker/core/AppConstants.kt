@@ -19,7 +19,8 @@ object AppConstants {
 
     //Buttons
     const val SIGN_IN_WITH_GOOGLE = "Sign in with Google"
-    const val UPDATE = "Update"
+    const val UPDATE = "Update Receipt"
+    const val ADD_RECEIPT = "Add Receipt"
 
     //Menu Items
     const val HOME = "Home"
@@ -31,6 +32,7 @@ object AppConstants {
     const val DASHBOARD_SCREEN = "dashboard"
     const val RECEIPT_DETAILS_SCREEN = "receipt_details"
     const val EDIT_RECEIPT_DETAILS_SCREEN = "edit_receipt_details"
+    const val MANUAL_ENTRY_RECEIPT_SCREEN = "manual_entry_receipt"
 
     //Empty Value
     const val NO_VALUE = ""
@@ -38,6 +40,7 @@ object AppConstants {
     //App Bar title
     const val RECEIPTS_DETAILS = "Receipt Details"
     const val EDIT_RECEIPTS_DETAILS = "Edit Receipt Details"
+    const val ADD_NEW_RECEIPTS = "Add new receipt"
     const val DASHBOARD = "Dashboard"
 
 
