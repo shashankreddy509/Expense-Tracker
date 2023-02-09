@@ -60,12 +60,12 @@ class ReceiptDetailsRepositoryImpl @Inject constructor(
     override suspend fun deleteReceipt(receiptId: String, fileName: String): Response<Boolean> {
         return try {
             receiptRef.document(receiptId).delete().await()
-            storageRef.child(fileName).delete().await()
+            if (fileName.isNotEmpty())
+                storageRef.child(fileName).delete().await()
             Response.Success(true)
         } catch (e: Exception) {
             Response.Failure(e)
         }
 
     }
-
 }

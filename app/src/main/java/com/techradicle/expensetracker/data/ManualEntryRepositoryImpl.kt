@@ -1,5 +1,6 @@
 package com.techradicle.expensetracker.data
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.techradicle.expensetracker.core.FirebaseConstants
@@ -11,6 +12,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ManualEntryRepositoryImpl @Inject constructor(
+    private val auth: FirebaseAuth,
     firestore: FirebaseFirestore
 ) : ManualEntryRepository {
 
@@ -25,7 +27,8 @@ class ManualEntryRepositoryImpl @Inject constructor(
                     FirebaseConstants.STORE_NAME to insertReceiptData.storeName,
                     FirebaseConstants.TOTAL to insertReceiptData.total,
                     FirebaseConstants.DATE to insertReceiptData.date,
-                    FirebaseConstants.CARD_NO to insertReceiptData.cardNo
+                    FirebaseConstants.CARD_NO to insertReceiptData.cardNo,
+                    FirebaseConstants.UID to auth.currentUser!!.uid,
                 )
             ).await()
             Response.Success(true)

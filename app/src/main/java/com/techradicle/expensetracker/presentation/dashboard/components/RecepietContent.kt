@@ -2,10 +2,9 @@ package com.techradicle.expensetracker.presentation.dashboard.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.HideImage
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,6 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.techradicle.expensetracker.components.icons.ThumbImage
+import com.techradicle.expensetracker.core.AppConstants.NO_IMAGE
 import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
 import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.domain.model.ReceiptData
@@ -39,11 +39,20 @@ fun ReceiptContent(
             modifier = Modifier.fillMaxWidth(),
         ) {
             receipt.apply {
-                ThumbImage(
-                    url = imageUrl!!,
-                    width = 64.dp,
-                    height = 64.dp,
-                    padding = 8.dp
+                imageUrl?.let {
+                    ThumbImage(
+                        url = it,
+                        width = 64.dp,
+                        height = 64.dp,
+                        padding = 8.dp
+                    )
+                } ?: Icon(
+                    imageVector = Icons.Default.HideImage,
+                    contentDescription = NO_IMAGE,
+                    modifier = Modifier
+                        .width(64.dp)
+                        .height(64.dp)
+                        .padding(8.dp)
                 )
                 Column {
                     Text(

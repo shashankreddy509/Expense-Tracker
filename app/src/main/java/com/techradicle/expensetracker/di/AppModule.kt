@@ -154,8 +154,10 @@ object AppModule {
 
     @Provides
     fun provideManualEntryRepository(
+        auth: FirebaseAuth,
         firestore: FirebaseFirestore
     ): ManualEntryRepository = ManualEntryRepositoryImpl(
+        auth = auth,
         firestore = firestore
     )
 

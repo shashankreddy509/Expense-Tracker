@@ -53,7 +53,10 @@ fun EditReceiptDetailsContent(
                     "Amount: ", amount,
                     KeyboardOptions(keyboardType = KeyboardType.Decimal)
                 )
-                EditRowItems("Card No: ", cardNumber)
+                EditRowItems(
+                    "Card No: ", cardNumber,
+                    KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                )
                 if (openDialog.value) {
                     ExpenseAlertDialog(
                         openDialog = openDialog,

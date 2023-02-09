@@ -32,7 +32,7 @@ fun AddReceiptContent(
         EditRowItems("Store name: ", storeName)
         EditRowItems("Created at: ", date)
         EditRowItems("Amount: ", total, KeyboardOptions(keyboardType = KeyboardType.Decimal))
-        EditRowItems("Card No: ", cardNo)
+        EditRowItems("Card No: ", cardNo, KeyboardOptions(keyboardType = KeyboardType.Decimal))
         Box(
             modifier = Modifier
                 .fillMaxSize()

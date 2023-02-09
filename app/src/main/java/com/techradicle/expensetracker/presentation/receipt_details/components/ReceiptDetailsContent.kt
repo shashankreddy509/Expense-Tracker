@@ -46,22 +46,24 @@ fun ReceiptDetailContent(
             ) {
                 receipt.apply {
                     name.value = fileName ?: NO_VALUE
-                    Box(contentAlignment = Alignment.TopEnd) {
-                        //Place Image here
-                        AsyncImage(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .width(200.dp)
-                                .height(200.dp)
-                                .padding(8.dp),
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(imageUrl)
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = null
-                        )
+                    imageUrl?.let {
+                        Box(contentAlignment = Alignment.TopEnd) {
+                            //Place Image here
+                            AsyncImage(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .width(200.dp)
+                                    .height(200.dp)
+                                    .padding(8.dp),
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(imageUrl)
+                                    .crossfade(true)
+                                    .build(),
+                                contentDescription = null
+                            )
+                        }
+                        ShortDivider()
                     }
-                    ShortDivider()
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()

@@ -48,6 +48,7 @@ object AppConstants {
     const val GO_BACK = "back"
     const val EDIT = "Edit"
     const val DELETE = "Delete"
+    const val NO_IMAGE = "No image"
 
     //Arguments
     const val RECEIPT_ID = "receiptId"
