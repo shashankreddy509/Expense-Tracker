@@ -10,7 +10,10 @@ import androidx.paging.cachedIn
 import com.techradicle.expensetracker.core.Utils.Companion.items
 import com.techradicle.expensetracker.domain.model.ImageUploadData
 import com.techradicle.expensetracker.domain.model.Response
+import com.techradicle.expensetracker.domain.model.SettingValues
 import com.techradicle.expensetracker.domain.repository.DashboardRepository
+import com.techradicle.expensetracker.domain.repository.SettingsDataResponse
+import com.techradicle.expensetracker.domain.repository.SettingsValuesResponse
 import com.techradicle.expensetracker.domain.repository.SignOutResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -30,6 +33,9 @@ class DashboardViewModel @Inject constructor(
     var signOutResponse by mutableStateOf<SignOutResponse>(Response.Success(false))
         private set
 
+    var settingValuesResponse by mutableStateOf<SettingsValuesResponse>(Response.Success(false))
+    var settingDataResponse by mutableStateOf<SettingsDataResponse>(Response.Success(null))
+
     fun uploadImage(uri: Uri, filePath: String) = viewModelScope.launch {
         imageUrl = Response.Loading
         imageUrl = repo.uploadImageToStorage(uri = uri, filePath = filePath)
@@ -44,5 +50,15 @@ class DashboardViewModel @Inject constructor(
     fun signOut() = viewModelScope.launch {
         signOutResponse = Response.Loading
         signOutResponse = repo.signOut()
+    }
+
+    fun saveSettingsValues(settingValues: SettingValues) = viewModelScope.launch {
+        settingValuesResponse = Response.Loading
+        settingValuesResponse = repo.saveSettingValues(settingValues)
+    }
+
+    fun getSettingValues() = viewModelScope.launch {
+        settingDataResponse = Response.Loading
+        settingDataResponse = repo.getSettingValues()
     }
 }

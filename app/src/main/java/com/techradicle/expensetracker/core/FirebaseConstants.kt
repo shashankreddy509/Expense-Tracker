@@ -12,6 +12,9 @@ object FirebaseConstants {
 
     //Firebase firestore colletions and documents
     const val RECEIPTS = "receipts"
+    const val SETTINGS = "settings"
+
+    //lables
     const val IMAGE_URL = "imageUrl"
     const val IMAGE_DATA = "imageData"
     const val UID = "uid"
@@ -24,6 +27,8 @@ object FirebaseConstants {
     const val CARD_NO = "cardNo"
     const val MODIFIED_ON = "modifiedOn"
     const val FILE_NAME = "fileName"
+    const val MAX_AMOUNT_PER_RECEIPT = "maxAmountPerReceipt"
+    const val MAX_AMOUNT_FOR_MONTH = "maxMonthAmount"
 
     //Paging Limit
     const val PAGE_SIZE = 8L

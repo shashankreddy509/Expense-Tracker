@@ -19,20 +19,22 @@ import com.techradicle.expensetracker.core.FirebaseConstants.ID
 import com.techradicle.expensetracker.core.FirebaseConstants.IMAGE_DATA
 import com.techradicle.expensetracker.core.FirebaseConstants.IMAGE_URL
 import com.techradicle.expensetracker.core.FirebaseConstants.ITEMS
+import com.techradicle.expensetracker.core.FirebaseConstants.MAX_AMOUNT_FOR_MONTH
+import com.techradicle.expensetracker.core.FirebaseConstants.MAX_AMOUNT_PER_RECEIPT
 import com.techradicle.expensetracker.core.FirebaseConstants.PAGE_SIZE
 import com.techradicle.expensetracker.core.FirebaseConstants.RECEIPTS
+import com.techradicle.expensetracker.core.FirebaseConstants.SETTINGS
 import com.techradicle.expensetracker.core.FirebaseConstants.STORE_NAME
 import com.techradicle.expensetracker.core.FirebaseConstants.TIME
 import com.techradicle.expensetracker.core.FirebaseConstants.TOTAL
 import com.techradicle.expensetracker.core.FirebaseConstants.UID
 import com.techradicle.expensetracker.data.remote.OcrApi
-import com.techradicle.expensetracker.domain.model.ImageUploadData
-import com.techradicle.expensetracker.domain.model.Response
+import com.techradicle.expensetracker.domain.model.*
 import com.techradicle.expensetracker.domain.model.Response.Failure
 import com.techradicle.expensetracker.domain.model.Response.Success
-import com.techradicle.expensetracker.domain.model.User
 import com.techradicle.expensetracker.domain.model.ocrdata.OcrData
 import com.techradicle.expensetracker.domain.repository.DashboardRepository
+import com.techradicle.expensetracker.domain.repository.SettingsValuesResponse
 import com.techradicle.expensetracker.domain.repository.SignOutResponse
 import kotlinx.coroutines.tasks.await
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -57,6 +59,7 @@ class DashboardRepositoryImpl @Inject constructor(
 
     var storageRef = storage.reference
     var firestorCollection = firestore.collection(RECEIPTS)
+    var settingsCollection = firestore.collection(SETTINGS)
 
     override val user = User(
         uid = auth.currentUser?.uid ?: NO_VALUE,
@@ -126,6 +129,29 @@ class DashboardRepositoryImpl @Inject constructor(
             oneTapClient.signOut().await()
             auth.signOut()
             Success(true)
+        } catch (e: Exception) {
+            Failure(e)
+        }
+    }
+
+    override suspend fun saveSettingValues(settingsValues: SettingValues): SettingsValuesResponse {
+        return try {
+            settingsCollection.document(user.uid).set(
+                mapOf(
+                    MAX_AMOUNT_PER_RECEIPT to settingsValues.maxAmountPerReceipt,
+                    MAX_AMOUNT_FOR_MONTH to settingsValues.maxMonthAmount
+                )
+            ).await()
+            Success(true)
+        } catch (e: Exception) {
+            Failure(e)
+        }
+    }
+
+    override suspend fun getSettingValues(): Response<SettingsData> {
+        return try {
+            val settingData = settingsCollection.document(user.uid).get().await()
+            Success(settingData.toObject(SettingsData::class.java))
         } catch (e: Exception) {
             Failure(e)
         }

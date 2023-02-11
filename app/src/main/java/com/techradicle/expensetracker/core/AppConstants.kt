@@ -21,6 +21,7 @@ object AppConstants {
     const val SIGN_IN_WITH_GOOGLE = "Sign in with Google"
     const val UPDATE = "Update Receipt"
     const val ADD_RECEIPT = "Add Receipt"
+    const val SAVE = "Save"
 
     //Menu Items
     const val HOME = "Home"

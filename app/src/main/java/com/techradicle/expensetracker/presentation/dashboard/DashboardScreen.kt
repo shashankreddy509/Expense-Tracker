@@ -43,7 +43,7 @@ import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.presentation.dashboard.components.SignOut
 import com.techradicle.expensetracker.presentation.dashboard.components.bottomsheet.ExpenseBottomSheetContent
 import com.techradicle.expensetracker.presentation.dashboard.components.drawer.DrawerContent
-import com.techradicle.expensetracker.presentation.dashboard.components.drawer.draweritems.DrawerItemSettings
+import com.techradicle.expensetracker.presentation.dashboard.components.drawer.DrawerItemSettings
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
@@ -192,7 +192,7 @@ fun DashboardScreen(
                                 }
                             }
                             items[1] -> {
-                                DrawerItemSettings(padding)
+                                DrawerItemSettings(padding = padding)
                             }
                             items[2] -> viewModel.signOut()
                         }
