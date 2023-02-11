@@ -15,6 +15,7 @@ import com.google.firebase.auth.GoogleAuthProvider.getCredential
 import com.techradicle.expensetracker.R
 import com.techradicle.expensetracker.components.AuthTopBar
 import com.techradicle.expensetracker.core.Utils
+import com.techradicle.expensetracker.presentation.auth.components.AuthContent
 import com.techradicle.expensetracker.presentation.auth.components.OneTapSignIn
 import com.techradicle.expensetracker.presentation.auth.components.SignInWithGoogle
 
