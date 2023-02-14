@@ -7,6 +7,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -76,15 +77,22 @@ fun EditReceiptDetailsContent(
                         }
                     )
                 }
-                OutlinedButton(onClick = {
-                    Log.e(TAG, "Store Name: ${merchantName.value}")
-                    Log.e(TAG, "dateAt : ${dateAt.value}")
-                    Log.e(TAG, "amount: ${amount.value}")
-                    Log.e(TAG, "cardNumber: ${cardNumber.value}")
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    OutlinedButton(onClick = {
+                        Log.e(TAG, "Store Name: ${merchantName.value}")
+                        Log.e(TAG, "dateAt : ${dateAt.value}")
+                        Log.e(TAG, "amount: ${amount.value}")
+                        Log.e(TAG, "cardNumber: ${cardNumber.value}")
 
-                    openDialog.value = true
-                }) {
-                    Text(text = UPDATE)
+                        openDialog.value = true
+                    }) {
+                        Text(text = UPDATE)
+                    }
                 }
             }
         }

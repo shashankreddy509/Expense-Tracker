@@ -36,6 +36,7 @@ fun EditRowItems(
             onValueChange = {
                 value.value = it
             },
+            maxLines = 1,
             keyboardOptions = keyboardOptions
         )
     }

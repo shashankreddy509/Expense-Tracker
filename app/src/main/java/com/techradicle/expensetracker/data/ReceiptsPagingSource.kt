@@ -19,7 +19,7 @@ class ReceiptsPagingSource(
         val lastVisibleDocument = currentPage.documents[currentPage.size() - 1]
         val nextPage = query.startAfter(lastVisibleDocument).get().await()
         LoadResult.Page(
-            data = currentPage.toObjects(ReceiptData::class.java),
+            data = currentPage.toObjects(ReceiptData::class.java).sortedByDescending { it.date },
             prevKey = null,
             nextKey = nextPage
         )
