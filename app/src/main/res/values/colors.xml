@@ -11,4 +11,10 @@
     <color name="primary_dark">#303F9F</color>
     <color name="primary_light">#EEEEEE</color>
     <color name="accent">#FF4081</color>
+    //Pastel colors
+    <color name="tomato">#F27348</color>
+    <color name="sienna">#874841</color>
+    <color name="dim_gray">#40393E</color>
+    <color name="gray">#897C87</color>
+    <color name="pastel_red">#FF6961</color>
 </resources>

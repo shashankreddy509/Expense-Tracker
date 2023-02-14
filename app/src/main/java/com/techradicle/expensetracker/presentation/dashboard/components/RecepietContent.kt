@@ -9,9 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.techradicle.expensetracker.R
 import com.techradicle.expensetracker.components.icons.ThumbImage
 import com.techradicle.expensetracker.core.AppConstants.NO_IMAGE
 import com.techradicle.expensetracker.core.AppConstants.NO_VALUE
@@ -29,7 +31,7 @@ fun ReceiptContent(
     val receiptId = receipt.id ?: NO_VALUE
     val color = if (maxReceiptSpent.value.isNotEmpty()) {
         if (maxReceiptSpent.value.toDouble() < receipt.total!!) {
-            Color.Red
+            colorResource(id = R.color.pastel_red)
         } else Color.White
     } else Color.White
     Card(

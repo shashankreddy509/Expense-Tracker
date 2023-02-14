@@ -58,8 +58,9 @@ class DashboardRepositoryImpl @Inject constructor(
 ) : DashboardRepository {
 
     var storageRef = storage.reference
-    var firestorCollection = firestore.collection(RECEIPTS)
-    var settingsCollection = firestore.collection(SETTINGS)
+    var userCollection = firestore.collection(RECEIPTS).document(auth.currentUser!!.uid)
+    var firestorCollection = userCollection.collection(RECEIPTS)
+    var settingsCollection = userCollection.collection(SETTINGS)
 
     override val user = User(
         uid = auth.currentUser?.uid ?: NO_VALUE,
@@ -120,6 +121,8 @@ class DashboardRepositoryImpl @Inject constructor(
         ReceiptsPagingSource(
             query = firestore.collection(RECEIPTS)
                 .whereEqualTo(UID, user.uid)
+                .whereGreaterThanOrEqualTo(DATE, "2023-02-01")
+                .whereLessThanOrEqualTo(DATE, "2023-02-28")
                 .limit(PAGE_SIZE)
         )
     }.flow
