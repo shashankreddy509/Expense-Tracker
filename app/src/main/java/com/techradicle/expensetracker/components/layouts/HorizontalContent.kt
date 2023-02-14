@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -16,6 +17,8 @@ import com.techradicle.expensetracker.presentation.dashboard.components.ReceiptC
 fun HorizontalContent(
     receiptsPaging: LazyPagingItems<ReceiptData>,
     navigateToReceiptDetailsScreen: (receiptId: String) -> Unit,
+    maxMonthSpent: MutableState<String>,
+    maxReceiptSpent: MutableState<String>,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -25,7 +28,12 @@ fun HorizontalContent(
     ) {
         items(receiptsPaging) { receipt ->
             receipt?.let {
-                ReceiptContent(receipt = receipt, onClick = navigateToReceiptDetailsScreen)
+                ReceiptContent(
+                    receipt = receipt,
+                    onClick = navigateToReceiptDetailsScreen,
+                    maxMonthSpent = maxMonthSpent,
+                    maxReceiptSpent = maxReceiptSpent
+                )
             }
         }
     }

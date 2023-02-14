@@ -38,6 +38,7 @@ import com.techradicle.expensetracker.components.ProgressBar
 import com.techradicle.expensetracker.components.layouts.HorizontalContent
 import com.techradicle.expensetracker.core.AppConstants.DASHBOARD
 import com.techradicle.expensetracker.core.AppConstants.NO_RECORDS
+import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.core.Utils.Companion.items
 import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.presentation.dashboard.components.SignOut
@@ -62,12 +63,19 @@ fun DashboardScreen(
     var fileUrl by remember { mutableStateOf("") }
     val context = LocalContext.current
 
+    val maxMonthSpent = remember { mutableStateOf("") }
+    val maxReceiptSpent = remember { mutableStateOf("") }
+
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
         onResult = { success ->
             hasImage = success
         }
     )
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getSettingValues()
+    }
 
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -173,7 +181,9 @@ fun DashboardScreen(
                                             HorizontalContent(
                                                 receiptsPaging = viewModel.getReceipts()
                                                     .collectAsLazyPagingItems(),
-                                                navigateToReceiptDetailsScreen = navigateToReceiptDetailsScreen
+                                                navigateToReceiptDetailsScreen = navigateToReceiptDetailsScreen,
+                                                maxMonthSpent = maxMonthSpent,
+                                                maxReceiptSpent = maxReceiptSpent
                                             )
                                         }
                                         receipts.itemCount == 0 -> {
@@ -192,7 +202,11 @@ fun DashboardScreen(
                                 }
                             }
                             items[1] -> {
-                                DrawerItemSettings(padding = padding)
+                                DrawerItemSettings(
+                                    padding = padding,
+                                    maxMonthSpent = maxMonthSpent,
+                                    maxReceiptSpent = maxReceiptSpent
+                                )
                             }
                             items[2] -> viewModel.signOut()
                         }
@@ -244,6 +258,16 @@ fun DashboardScreen(
         }
         is Response.Failure -> LaunchedEffect(Unit) {
             print(addImageToStorageResponse.e)
+        }
+    }
+
+    when (val saveSettings = viewModel.settingDataResponse) {
+        is Response.Failure -> LaunchedEffect(key1 = Unit) { Utils.print(saveSettings.e) }
+        is Response.Loading -> ProgressBar()
+        is Response.Success -> saveSettings.data?.let { data ->
+            maxReceiptSpent.value = (data.maxAmountPerReceipt ?: 0.0).toString()
+            maxMonthSpent.value = (data.maxMonthAmount ?: 0.0).toString()
+            viewModel.settingDataResponse = Response.Success(null)
         }
     }
 }

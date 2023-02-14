@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.HideImage
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -22,8 +23,15 @@ import com.techradicle.expensetracker.domain.model.ReceiptData
 fun ReceiptContent(
     receipt: ReceiptData,
     onClick: (receiptId: String) -> Unit,
+    maxMonthSpent: MutableState<String>,
+    maxReceiptSpent: MutableState<String>,
 ) {
     val receiptId = receipt.id ?: NO_VALUE
+    val color = if (maxReceiptSpent.value.isNotEmpty()) {
+        if (maxReceiptSpent.value.toDouble() < receipt.total!!) {
+            Color.Red
+        } else Color.White
+    } else Color.White
     Card(
         modifier = Modifier
             .padding(4.dp)
@@ -31,7 +39,7 @@ fun ReceiptContent(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(3.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = color
         ),
         onClick = { onClick(receiptId) }
     ) {

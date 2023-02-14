@@ -8,8 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -27,15 +26,10 @@ import com.techradicle.expensetracker.presentation.dashboard.DashboardViewModel
 @Composable
 fun DrawerItemSettings(
     viewModel: DashboardViewModel = hiltViewModel(),
-    padding: PaddingValues
+    padding: PaddingValues,
+    maxMonthSpent: MutableState<String>,
+    maxReceiptSpent: MutableState<String>
 ) {
-
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getSettingValues()
-    }
-
-    val maxMonthSpent = remember { mutableStateOf("") }
-    val maxReceiptSpent = remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -94,16 +88,6 @@ fun DrawerItemSettings(
                 viewModel.selectedItem = items[0]
                 viewModel.settingValuesResponse = Response.Success(false)
             }
-        }
-    }
-
-    when (val saveSettings = viewModel.settingDataResponse) {
-        is Response.Failure -> LaunchedEffect(key1 = Unit) { Utils.print(saveSettings.e) }
-        is Response.Loading -> ProgressBar()
-        is Response.Success -> saveSettings.data?.let { data ->
-            maxReceiptSpent.value = (data.maxAmountPerReceipt ?: 0.0).toString()
-            maxMonthSpent.value = (data.maxMonthAmount ?: 0.0).toString()
-            viewModel.settingDataResponse = Response.Success(null)
         }
     }
 }
