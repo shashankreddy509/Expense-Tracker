@@ -7,6 +7,7 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storageMetadata
@@ -28,6 +29,7 @@ import com.techradicle.expensetracker.core.FirebaseConstants.STORE_NAME
 import com.techradicle.expensetracker.core.FirebaseConstants.TIME
 import com.techradicle.expensetracker.core.FirebaseConstants.TOTAL
 import com.techradicle.expensetracker.core.FirebaseConstants.UID
+import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.data.remote.OcrApi
 import com.techradicle.expensetracker.domain.model.*
 import com.techradicle.expensetracker.domain.model.Response.Failure
@@ -52,7 +54,7 @@ class DashboardRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private var oneTapClient: SignInClient,
     storage: FirebaseStorage,
-    private val firestore: FirebaseFirestore,
+    firestore: FirebaseFirestore,
     private val config: PagingConfig,
     private val api: OcrApi
 ) : DashboardRepository {
@@ -119,10 +121,10 @@ class DashboardRepositoryImpl @Inject constructor(
         config = config
     ) {
         ReceiptsPagingSource(
-            query = firestore.collection(RECEIPTS)
-                .whereEqualTo(UID, user.uid)
-                .whereGreaterThanOrEqualTo(DATE, "2023-02-01")
-                .whereLessThanOrEqualTo(DATE, "2023-02-28")
+            query = firestorCollection
+                .whereGreaterThanOrEqualTo(DATE, Utils.getFirstDateOfTheMonth())
+                .whereLessThanOrEqualTo(DATE, Utils.getLastDateOfTheMonth())
+                .orderBy(DATE, Query.Direction.DESCENDING)
                 .limit(PAGE_SIZE)
         )
     }.flow

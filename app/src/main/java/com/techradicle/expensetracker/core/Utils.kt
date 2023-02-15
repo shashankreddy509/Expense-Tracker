@@ -2,7 +2,9 @@ package com.techradicle.expensetracker.core
 
 import android.util.Log
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.paging.LoadState
 import com.techradicle.expensetracker.core.AppConstants.HOME
 import com.techradicle.expensetracker.core.AppConstants.SETTINGS
@@ -10,11 +12,17 @@ import com.techradicle.expensetracker.core.AppConstants.SIGN_OUT
 import com.techradicle.expensetracker.core.AppConstants.TAG
 import com.techradicle.expensetracker.domain.model.DrawerItem
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 
 class Utils {
 
     companion object {
+
+        val month = LocalDate.now().month
+        val year = LocalDate.now().year
+        val date = LocalDate.of(year, month, 1)
+
         fun print(e: Exception?) {
             Log.e(TAG, e?.message ?: e.toString())
         }
@@ -49,5 +57,9 @@ class Utils {
                 dateFormatter(createdAt)
             }
         }
+
+        fun getLastDateOfTheMonth() = date.plusMonths(1).minusDays(1).toString()
+
+        fun getFirstDateOfTheMonth() = date.toString()
     }
 }

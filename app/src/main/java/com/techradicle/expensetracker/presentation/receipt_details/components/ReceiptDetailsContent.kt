@@ -1,8 +1,6 @@
 package com.techradicle.expensetracker.presentation.receipt_details.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -110,22 +108,6 @@ fun ReceiptDetailContent(
                                 fontSize = 16.sp,
                                 color = Color.DarkGray
                             )
-                        }
-                        items?.let { receiptItems ->
-                            Text(
-                                text = "Items",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 8.dp, bottom = 8.dp),
-                                fontSize = 16.sp,
-                                color = Color.DarkGray
-                            )
-                            ShortDivider()
-                            LazyColumn {
-                                items(receiptItems) { item ->
-                                    ReceiptItems(item = item)
-                                }
-                            }
                         }
                     }
                 }
