@@ -4,21 +4,12 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +33,7 @@ import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.core.Utils.Companion.items
 import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.presentation.dashboard.components.SignOut
+import com.techradicle.expensetracker.presentation.dashboard.components.bottombar.ExpenseTrackerBottomBar
 import com.techradicle.expensetracker.presentation.dashboard.components.bottomsheet.ExpenseBottomSheetContent
 import com.techradicle.expensetracker.presentation.dashboard.components.drawer.DrawerContent
 import com.techradicle.expensetracker.presentation.dashboard.components.drawer.DrawerItemSettings
@@ -61,6 +53,7 @@ fun DashboardScreen(
     var hasImage by remember { mutableStateOf(false) }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var fileUrl by remember { mutableStateOf("") }
+    val selectedItem = remember { mutableStateOf(0) }
     val context = LocalContext.current
 
     val maxMonthSpent = remember { mutableStateOf("") }
@@ -161,7 +154,6 @@ fun DashboardScreen(
                         )
                     },
                     content = { padding ->
-
                         when (viewModel.selectedItem) {
                             items[0] -> {
                                 Column(
@@ -201,7 +193,7 @@ fun DashboardScreen(
                                     }
                                 }
                             }
-                            items[1] -> {
+                            items[2] -> {
                                 DrawerItemSettings(
                                     padding = padding,
                                     maxMonthSpent = maxMonthSpent,
@@ -211,26 +203,12 @@ fun DashboardScreen(
                             items[2] -> viewModel.signOut()
                         }
                     },
-                    floatingActionButton = {
-                        when (viewModel.selectedItem) {
-                            items[0] -> FloatingActionButton(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                                            bottomSheetScaffoldState.bottomSheetState.expand()
-                                        }
-                                    }
-                                },
-                                containerColor = colorResource(id = R.color.primary_dark),
-                                shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50))
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
-                            }
-                        }
+                    bottomBar = {
+                        ExpenseTrackerBottomBar(
+                            selectedItem = selectedItem,
+                            coroutineScope = coroutineScope,
+                            bottomSheetScaffoldState = bottomSheetScaffoldState
+                        )
                     }
                 )
             }

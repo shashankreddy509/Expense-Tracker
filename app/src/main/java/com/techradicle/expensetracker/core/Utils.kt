@@ -2,10 +2,9 @@ package com.techradicle.expensetracker.core
 
 import android.util.Log
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.paging.LoadState
+import com.techradicle.expensetracker.core.AppConstants.ADD_RECEIPT
 import com.techradicle.expensetracker.core.AppConstants.HOME
 import com.techradicle.expensetracker.core.AppConstants.SETTINGS
 import com.techradicle.expensetracker.core.AppConstants.SIGN_OUT
@@ -36,6 +35,7 @@ class Utils {
 
         val items = listOf(
             DrawerItem(Icons.Default.Home, HOME, HOME),
+            DrawerItem(Icons.Default.AddCircle, ADD_RECEIPT, ADD_RECEIPT),
             DrawerItem(Icons.Default.Settings, SETTINGS, SETTINGS),
             DrawerItem(Icons.Default.ExitToApp, SIGN_OUT, SIGN_OUT)
         )
