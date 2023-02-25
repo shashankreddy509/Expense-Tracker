@@ -1,5 +1,6 @@
 package com.techradicle.expensetracker.data
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -15,11 +16,13 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class ReceiptDetailsRepositoryImpl @Inject constructor(
+    private val auth: FirebaseAuth,
     firebaseFirestore: FirebaseFirestore,
     storage: FirebaseStorage
 ) : ReceiptDetailsRepository {
 
-    private val receiptRef = firebaseFirestore.collection(RECEIPTS)
+    var userCollection = firebaseFirestore.collection(RECEIPTS).document(auth.currentUser!!.uid)
+    private val receiptRef = userCollection.collection(RECEIPTS)
     var storageRef = storage.reference
 
     override fun getReceipt(receiptId: String) = callbackFlow {

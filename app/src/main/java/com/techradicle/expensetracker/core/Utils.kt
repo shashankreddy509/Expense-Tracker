@@ -11,6 +11,7 @@ import com.techradicle.expensetracker.core.AppConstants.SETTINGS
 import com.techradicle.expensetracker.core.AppConstants.SIGN_OUT
 import com.techradicle.expensetracker.core.AppConstants.TAG
 import com.techradicle.expensetracker.domain.model.DrawerItem
+import com.techradicle.expensetracker.domain.model.ReceiptData
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -61,5 +62,9 @@ class Utils {
         fun getLastDateOfTheMonth() = date.plusMonths(1).minusDays(1).toString()
 
         fun getFirstDateOfTheMonth() = date.toString()
+
+        fun getTotal(items: List<ReceiptData>): Double {
+            return items.sumOf { it.total!! }
+        }
     }
 }

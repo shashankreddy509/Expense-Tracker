@@ -16,7 +16,9 @@ class ManualEntryRepositoryImpl @Inject constructor(
     firestore: FirebaseFirestore
 ) : ManualEntryRepository {
 
-    var firestorCollection = firestore.collection(FirebaseConstants.RECEIPTS)
+    var firestorCollection = firestore.collection(FirebaseConstants.RECEIPTS).document(auth.currentUser!!.uid).collection(
+        FirebaseConstants.RECEIPTS
+    )
     override suspend fun addReceiptDataToDatabase(insertReceiptData: InsertReceiptData): ManualEntryResponse {
         return try {
             val id = firestorCollection.document().id
