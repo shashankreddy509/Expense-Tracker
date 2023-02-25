@@ -10,6 +10,7 @@ import com.techradicle.expensetracker.core.AppConstants.HOME
 import com.techradicle.expensetracker.core.AppConstants.SETTINGS
 import com.techradicle.expensetracker.core.AppConstants.SIGN_OUT
 import com.techradicle.expensetracker.core.AppConstants.TAG
+import com.techradicle.expensetracker.domain.model.ChartData
 import com.techradicle.expensetracker.domain.model.DrawerItem
 import com.techradicle.expensetracker.domain.model.ReceiptData
 import java.text.SimpleDateFormat
@@ -63,8 +64,27 @@ class Utils {
 
         fun getFirstDateOfTheMonth() = date.toString()
 
-        fun getTotal(items: List<ReceiptData>): Double {
-            return items.sumOf { it.total!! }
+        fun getTotal(items: List<ReceiptData>): String {
+            return String.format("%.2f", items.sumOf { it.total!! })
+//            return items.sumOf { it.total!! }
+        }
+
+        fun getChartData(items: List<ReceiptData>): List<ChartData> {
+            val chartData = mutableListOf<ChartData>()
+            var amount = 0.0
+            var date = ""
+            for (item in items) {
+                if(date.isEmpty()) date = item.date!!
+                if (date.equals(item.date, false)) {
+                    amount += item.total!!
+                } else {
+                    chartData.add(ChartData(date, amount))
+                    date = item.date!!
+                    amount = item.total!!
+                }
+            }
+            chartData.add(ChartData(date, amount))
+            return chartData.sortedBy { it.date }
         }
     }
 }
