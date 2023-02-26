@@ -4,11 +4,14 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material3.*
-import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -35,7 +38,6 @@ import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.presentation.dashboard.components.SignOut
 import com.techradicle.expensetracker.presentation.dashboard.components.bottombar.ExpenseTrackerBottomBar
 import com.techradicle.expensetracker.presentation.dashboard.components.bottomsheet.ExpenseBottomSheetContent
-import com.techradicle.expensetracker.presentation.dashboard.components.drawer.DrawerContent
 import com.techradicle.expensetracker.presentation.dashboard.components.drawer.DrawerItemSettings
 import kotlinx.coroutines.launch
 import java.io.File
@@ -99,7 +101,6 @@ fun DashboardScreen(
             initialValue = BottomSheetValue.Collapsed
         )
     )
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
     BottomSheetScaffold(
@@ -132,87 +133,69 @@ fun DashboardScreen(
         sheetBackgroundColor = colorResource(id = R.color.primary),
         sheetPeekHeight = 0.dp
     ) {
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                DrawerContent(
-                    drawerState = drawerState,
-                    coroutineScope = coroutineScope,
-                    user = viewModel.user
-                )
+        Scaffold(
+            topBar = {
+                DrawerTopBar(title = DASHBOARD)
             },
-            content = {
-                Scaffold(
-                    topBar = {
-                        DrawerTopBar(
-                            openNavigationDrawer = {
-                                coroutineScope.launch {
-                                    drawerState.open()
-                                }
-                            },
-                            title = DASHBOARD
-                        )
-                    },
-                    content = { padding ->
-                        when (viewModel.selectedItem) {
-                            items[0] -> {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(padding)
-                                ) {
-                                    if (hasImage && imageUri != null) {
-                                        viewModel.uploadImage(imageUri!!, fileUrl)
-                                        hasImage = false
-                                        imageUri = null
-                                    }
-                                    val refresh = receipts.loadState.refresh
-                                    when {
-                                        refresh is LoadState.Loading -> ProgressBar()
-                                        receipts.itemCount > 0 -> {
-                                            HorizontalContent(
-                                                receiptsPaging = viewModel.getReceipts()
-                                                    .collectAsLazyPagingItems(),
-                                                navigateToReceiptDetailsScreen = navigateToReceiptDetailsScreen,
-                                                maxMonthSpent = maxMonthSpent,
-                                                maxReceiptSpent = maxReceiptSpent
-                                            )
-                                        }
-                                        receipts.itemCount == 0 -> {
-                                            Text(
-                                                text = NO_RECORDS,
-                                                fontSize = 24.sp,
-                                                color = Color.Black,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .fillMaxHeight()
-                                            )
-                                        }
-                                        refresh is LoadState.Error -> print(refresh)
-                                    }
-                                }
+            content = { padding ->
+                when (viewModel.selectedItem) {
+                    items[0] -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(padding)
+                        ) {
+                            if (hasImage && imageUri != null) {
+                                viewModel.uploadImage(imageUri!!, fileUrl)
+                                hasImage = false
+                                imageUri = null
                             }
-                            items[2] -> {
-                                DrawerItemSettings(
-                                    padding = padding,
-                                    maxMonthSpent = maxMonthSpent,
-                                    maxReceiptSpent = maxReceiptSpent
-                                )
+                            val refresh = receipts.loadState.refresh
+                            when {
+                                refresh is LoadState.Loading -> ProgressBar()
+                                receipts.itemCount > 0 -> {
+                                    HorizontalContent(
+                                        receiptsPaging = viewModel.getReceipts()
+                                            .collectAsLazyPagingItems(),
+                                        navigateToReceiptDetailsScreen = navigateToReceiptDetailsScreen,
+                                        maxMonthSpent = maxMonthSpent,
+                                        maxReceiptSpent = maxReceiptSpent
+                                    )
+                                }
+                                receipts.itemCount == 0 -> {
+                                    Text(
+                                        text = NO_RECORDS,
+                                        fontSize = 24.sp,
+                                        color = Color.Black,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .fillMaxHeight()
+                                    )
+                                }
+                                refresh is LoadState.Error -> print(refresh)
                             }
-                            items[2] -> viewModel.signOut()
                         }
-                    },
-                    bottomBar = {
-                        ExpenseTrackerBottomBar(
-                            selectedItem = selectedItem,
-                            coroutineScope = coroutineScope,
-                            bottomSheetScaffoldState = bottomSheetScaffoldState
+                    }
+                    items[2] -> {
+                        DrawerItemSettings(
+                            padding = padding,
+                            maxMonthSpent = maxMonthSpent,
+                            maxReceiptSpent = maxReceiptSpent
                         )
                     }
+                    items[2] -> viewModel.signOut()
+                }
+            },
+            bottomBar = {
+                ExpenseTrackerBottomBar(
+                    selectedItem = selectedItem,
+                    coroutineScope = coroutineScope,
+                    bottomSheetScaffoldState = bottomSheetScaffoldState
                 )
             }
         )
+
     }
 
     SignOut { signedOut ->
