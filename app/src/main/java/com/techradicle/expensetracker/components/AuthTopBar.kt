@@ -6,8 +6,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import com.techradicle.expensetracker.R
 
 @ExperimentalMaterial3Api
 @Composable
@@ -16,7 +14,7 @@ fun AuthTopBar(title: String) {
         title = {
             Text(
                 text = title,
-                color = Color.White
+                color = Color.Black
             )
         },
         colors = getTopBarColors()
@@ -26,7 +24,7 @@ fun AuthTopBar(title: String) {
 @Composable
 @ExperimentalMaterial3Api
 fun getTopBarColors() = TopAppBarDefaults.smallTopAppBarColors(
-    containerColor = colorResource(R.color.primary),
-    navigationIconContentColor = Color.White,
-    actionIconContentColor = Color.White
+    containerColor = Color.White,
+    navigationIconContentColor = Color.Black,
+    actionIconContentColor = Color.Black
 )

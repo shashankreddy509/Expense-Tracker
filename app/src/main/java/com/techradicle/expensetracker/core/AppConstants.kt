@@ -21,12 +21,27 @@ object AppConstants {
     const val SIGN_IN_WITH_GOOGLE = "Sign in with Google"
     const val UPDATE = "Update Receipt"
     const val ADD_RECEIPT = "Add Receipt"
+    const val STATS = "Stats"
     const val SAVE = "Save"
+    const val MORE = "MORE"
+
+    //Headers
+    const val ASSETS = "Assets"
+    const val LIABILITIES = "Liabilities"
+    const val TOTAL = "Total"
+    const val INCOME = "Income"
+    const val EXPENSES = "Expenses"
+
+    //Accounts Types
+    const val CASH = "Cash"
+    const val BANK = "Bank"
+    const val CARD = "Card"
 
     //Menu Items
     const val HOME = "Home"
     const val SETTINGS = "Settings"
     const val SIGN_OUT = "Sign-out"
+    const val ACCOUNTS = "Accounts"
 
     //Screens
     const val AUTH_SCREEN = "auth"

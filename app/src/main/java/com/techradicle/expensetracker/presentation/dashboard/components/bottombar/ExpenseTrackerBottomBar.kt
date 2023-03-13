@@ -3,21 +3,22 @@ package com.techradicle.expensetracker.presentation.dashboard.components.bottomb
 import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AddCircle
-import androidx.compose.material.icons.rounded.ExitToApp
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.More
+import androidx.compose.material.icons.rounded.StackedBarChart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.techradicle.expensetracker.R
 import com.techradicle.expensetracker.core.AppConstants
 import com.techradicle.expensetracker.core.Utils.Companion.items
 import com.techradicle.expensetracker.presentation.dashboard.DashboardViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @ExperimentalMaterial3Api
 @ExperimentalMaterialApi
@@ -29,20 +30,21 @@ fun ExpenseTrackerBottomBar(
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
     NavigationBar(
-        tonalElevation = 5.dp
+        tonalElevation = 5.dp,
+        containerColor = colorResource(id = R.color.primary_light)
     ) {
         bottomNavItems.forEachIndexed { index, bottomNavItem ->
             NavigationBarItem(selected = selectedItem.value == index, onClick = {
                 selectedItem.value = index
-                if (index == 1) {
-                    coroutineScope.launch {
-                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        }
-                    }
-                } else {
-                    viewModel.selectedItem = items[index]
-                }
+//                if (index == 1) {
+//                    coroutineScope.launch {
+//                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+//                            bottomSheetScaffoldState.bottomSheetState.expand()
+//                        }
+//                    }
+//                } else {
+//                }
+                viewModel.selectedItem = items[index]
             },
                 label = {
                     Text(
@@ -67,18 +69,18 @@ val bottomNavItems = listOf(
         icon = Icons.Rounded.Home,
     ),
     BottomNavItem(
-        name = AppConstants.ADD_RECEIPT,
-        route = AppConstants.ADD_RECEIPT,
-        icon = Icons.Rounded.AddCircle,
+        name = AppConstants.STATS,
+        route = AppConstants.STATS,
+        icon = Icons.Rounded.StackedBarChart,
     ),
     BottomNavItem(
-        name = AppConstants.SETTINGS,
-        route = AppConstants.SETTINGS,
-        icon = Icons.Rounded.Settings,
+        name = AppConstants.ACCOUNTS,
+        route = AppConstants.ACCOUNTS,
+        icon = Icons.Rounded.AccountCircle,
     ),
     BottomNavItem(
-        name = AppConstants.SIGN_OUT,
-        route = AppConstants.SIGN_OUT,
-        icon = Icons.Rounded.ExitToApp,
+        name = AppConstants.MORE,
+        route = AppConstants.MORE,
+        icon = Icons.Rounded.More,
     ),
 )

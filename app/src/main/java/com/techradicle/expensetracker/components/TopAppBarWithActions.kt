@@ -20,7 +20,7 @@ fun TopAppBarWithActions(
         title = {
             Text(
                 text = title,
-                color = Color.White
+                color = Color.Black
             )
         },
         navigationIcon = {

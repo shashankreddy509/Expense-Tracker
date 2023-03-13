@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.paging.LoadState
+import com.techradicle.expensetracker.core.AppConstants.ACCOUNTS
 import com.techradicle.expensetracker.core.AppConstants.ADD_RECEIPT
 import com.techradicle.expensetracker.core.AppConstants.HOME
-import com.techradicle.expensetracker.core.AppConstants.SETTINGS
 import com.techradicle.expensetracker.core.AppConstants.SIGN_OUT
 import com.techradicle.expensetracker.core.AppConstants.TAG
 import com.techradicle.expensetracker.domain.model.ChartData
@@ -36,7 +36,7 @@ class Utils {
         val items = listOf(
             DrawerItem(Icons.Default.Home, HOME, HOME),
             DrawerItem(Icons.Default.AddCircle, ADD_RECEIPT, ADD_RECEIPT),
-            DrawerItem(Icons.Default.Settings, SETTINGS, SETTINGS),
+            DrawerItem(Icons.Default.AccountCircle, ACCOUNTS, ACCOUNTS),
             DrawerItem(Icons.Default.ExitToApp, SIGN_OUT, SIGN_OUT)
         )
 
@@ -71,19 +71,25 @@ class Utils {
 
         fun getChartData(items: List<ReceiptData>): List<ChartData> {
             val chartData = mutableListOf<ChartData>()
+            var tempLst = mutableListOf<ReceiptData>()
             var amount = 0.0
             var date = ""
             for (item in items) {
-                if(date.isEmpty()) date = item.date!!
+                if (date.isEmpty()) date = item.date!!
                 if (date.equals(item.date, false)) {
                     amount += item.total!!
+                    tempLst.add(item)
                 } else {
-                    chartData.add(ChartData(date, amount))
+                    amount = String.format("%.2f", amount).toDouble()
+                    chartData.add(ChartData(date, amount, tempLst))
                     date = item.date!!
                     amount = item.total!!
+                    tempLst = mutableListOf()
+                    tempLst.add(item)
                 }
             }
-            chartData.add(ChartData(date, amount))
+            amount = String.format("%.2f", amount).toDouble()
+            chartData.add(ChartData(date, amount, tempLst))
             return chartData.sortedBy { it.date }
         }
     }

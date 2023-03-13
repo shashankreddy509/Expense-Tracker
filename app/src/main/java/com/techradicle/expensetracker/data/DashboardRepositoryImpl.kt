@@ -29,7 +29,6 @@ import com.techradicle.expensetracker.core.FirebaseConstants.STORE_NAME
 import com.techradicle.expensetracker.core.FirebaseConstants.TIME
 import com.techradicle.expensetracker.core.FirebaseConstants.TOTAL
 import com.techradicle.expensetracker.core.FirebaseConstants.UID
-import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.data.remote.OcrApi
 import com.techradicle.expensetracker.domain.model.*
 import com.techradicle.expensetracker.domain.model.Response.Failure
@@ -117,13 +116,13 @@ class DashboardRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getReceiptsFromFirestore() = Pager(
+    override fun getReceiptsFromFirestore(from: String, to: String) = Pager(
         config = config
     ) {
         ReceiptsPagingSource(
             query = firestorCollection
-                .whereGreaterThanOrEqualTo(DATE, Utils.getFirstDateOfTheMonth())
-                .whereLessThanOrEqualTo(DATE, Utils.getLastDateOfTheMonth())
+                .whereGreaterThanOrEqualTo(DATE, from)
+                .whereLessThanOrEqualTo(DATE, to)
                 .orderBy(DATE, Query.Direction.DESCENDING)
                 .limit(PAGE_SIZE)
         )

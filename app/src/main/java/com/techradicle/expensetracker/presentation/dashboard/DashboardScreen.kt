@@ -27,18 +27,17 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.techradicle.expensetracker.BuildConfig
 import com.techradicle.expensetracker.R
-import com.techradicle.expensetracker.components.DrawerTopBar
 import com.techradicle.expensetracker.components.ProgressBar
 import com.techradicle.expensetracker.components.layouts.HorizontalContent
-import com.techradicle.expensetracker.core.AppConstants.DASHBOARD
 import com.techradicle.expensetracker.core.AppConstants.NO_RECORDS
 import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.core.Utils.Companion.items
 import com.techradicle.expensetracker.domain.model.Response
+import com.techradicle.expensetracker.presentation.accounts.AccountsScreen
 import com.techradicle.expensetracker.presentation.dashboard.components.SignOut
 import com.techradicle.expensetracker.presentation.dashboard.components.bottombar.ExpenseTrackerBottomBar
 import com.techradicle.expensetracker.presentation.dashboard.components.bottomsheet.ExpenseBottomSheetContent
-import com.techradicle.expensetracker.presentation.dashboard.components.drawer.DrawerItemSettings
+import com.techradicle.expensetracker.presentation.dashboard.components.stats.StatsScreen
 import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
@@ -130,13 +129,12 @@ fun DashboardScreen(
         },
         scaffoldState = bottomSheetScaffoldState,
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        sheetBackgroundColor = colorResource(id = R.color.primary),
+        sheetBackgroundColor = colorResource(id = R.color.primary_light),
         sheetPeekHeight = 0.dp
     ) {
         Scaffold(
-            topBar = {
-                DrawerTopBar(title = DASHBOARD)
-            },
+            modifier = Modifier.fillMaxSize(),
+            contentColor = Color.LightGray,
             content = { padding ->
                 when (viewModel.selectedItem) {
                     items[0] -> {
@@ -177,14 +175,20 @@ fun DashboardScreen(
                             }
                         }
                     }
-                    items[2] -> {
-                        DrawerItemSettings(
-                            padding = padding,
-                            maxMonthSpent = maxMonthSpent,
-                            maxReceiptSpent = maxReceiptSpent
-                        )
+                    items[1] -> {
+                        StatsScreen(padding = padding)
                     }
-                    items[2] -> viewModel.signOut()
+                    items[2] -> {
+//                        DrawerItemSettings(
+//                            padding = padding,
+//                            maxMonthSpent = maxMonthSpent,
+//                            maxReceiptSpent = maxReceiptSpent
+//                        )
+                        AccountsScreen(padding = padding)
+                    }
+                    items[2] -> {
+                        viewModel.signOut()
+                    }
                 }
             },
             bottomBar = {

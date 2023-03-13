@@ -17,7 +17,7 @@ interface DashboardRepository {
 
     suspend fun addImageToDatabase(imageData: ImageUploadData): Response<Boolean>
 
-    fun getReceiptsFromFirestore(): Flow<ReceiptPagingData>
+    fun getReceiptsFromFirestore(from: String, to: String): Flow<ReceiptPagingData>
 
     suspend fun signOut(): SignOutResponse
 

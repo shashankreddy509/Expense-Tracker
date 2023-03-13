@@ -14,7 +14,17 @@
     //Pastel colors
     <color name="tomato">#F27348</color>
     <color name="sienna">#874841</color>
+
+    //gray's
     <color name="dim_gray">#40393E</color>
-    <color name="gray">#897C87</color>
+    <color name="light_gray">#D3CCCA</color>
+    <color name="gray">#86736C</color>
+    <color name="dark_olive_green">#46302B</color>
+
+
     <color name="pastel_red">#FF6961</color>
+
+    <color name="steel_blue">#5784BA</color>
+    <color name="indian_red">#C54B6C</color>
+    <color name="liabilities_color">#874841</color>
 </resources>

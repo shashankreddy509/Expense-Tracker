@@ -12,7 +12,7 @@ import com.techradicle.expensetracker.components.ProgressBar
 import com.techradicle.expensetracker.components.TopAppBarWithActions
 import com.techradicle.expensetracker.core.AppConstants.ALERT
 import com.techradicle.expensetracker.core.AppConstants.DELETE_RECEIPT
-import com.techradicle.expensetracker.core.AppConstants.RECEIPTS_DETAILS
+import com.techradicle.expensetracker.core.AppConstants.EXPENSES
 import com.techradicle.expensetracker.domain.model.Response
 import com.techradicle.expensetracker.presentation.receipt_details.components.ReceiptDetailContent
 
@@ -34,7 +34,7 @@ fun ReceiptDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBarWithActions(
-                title = RECEIPTS_DETAILS,
+                title = EXPENSES,
                 navigateBack = navigateBack,
                 onEditIconClick = { onEditIconClick(receiptId) },
                 receiptId = receiptId,

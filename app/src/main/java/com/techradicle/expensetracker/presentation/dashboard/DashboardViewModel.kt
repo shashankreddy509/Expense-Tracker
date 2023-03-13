@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.techradicle.expensetracker.core.Utils
 import com.techradicle.expensetracker.core.Utils.Companion.items
 import com.techradicle.expensetracker.domain.model.ImageUploadData
 import com.techradicle.expensetracker.domain.model.Response
@@ -45,7 +46,11 @@ class DashboardViewModel @Inject constructor(
         repo.addImageToDatabase(imageData)
     }
 
-    fun getReceipts() = repo.getReceiptsFromFirestore().cachedIn(viewModelScope)
+    fun getReceipts() =
+        repo.getReceiptsFromFirestore(
+            from = Utils.getFirstDateOfTheMonth(),
+            to = Utils.getLastDateOfTheMonth()
+        ).cachedIn(viewModelScope)
 
     fun signOut() = viewModelScope.launch {
         signOutResponse = Response.Loading
